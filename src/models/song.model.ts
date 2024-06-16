@@ -1,10 +1,10 @@
 export class Song {
     constructor(
-        public title: string,
+        public track: string,
         public artist: string,
         public album: string,
     ) {
-        this.title = title;
+        this.track = track;
         this.artist = artist;
         this.album = album;
     }
