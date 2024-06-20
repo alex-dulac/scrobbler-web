@@ -23,6 +23,11 @@ const UserProfile: React.FC<UserProfileProps> = ({userProfile, getUserProfile}) 
                     <p>Name: {userProfile.name}</p>
                 </div>
             )}
+            {!userProfile && (
+                <div>
+                    <h2>Loading...</h2>
+                </div>
+            )}
         </div>
     );
 };

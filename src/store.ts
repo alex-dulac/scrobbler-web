@@ -1,13 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { getCurrentSong, getUserProfile } from './service.ts';
+import {getCurrentSong, getUserProfile, scrobbleSong, setScrobbling, syncWithBackend} from './service.ts';
 import { Song } from "./models/song.model.ts";
 import { UserProfileModel } from "./models/user-profile.model.ts";
 
 const initialState = {
     activeTab: 'user',
-    scrobbling: false,
+    scrobbling: null,
     currentSong: null,
     userProfile: null,
+    scrobbleSongResult: null,
 };
 
 const actionTypes = {
@@ -15,6 +16,8 @@ const actionTypes = {
     SET_SCROBBLING: 'SET_SCROBBLING',
     SET_CURRENT_SONG: 'SET_CURRENT_SONG',
     SET_USER_PROFILE: 'SET_USER_PROFILE',
+    SET_SCROBBLE_SONG_RESULT: 'SET_SCROBBLE_SONG_RESULT',
+    SET_SYNC_DETAILS: 'SET_SYNC_DETAILS',
 };
 
 const actions = {
@@ -33,6 +36,14 @@ const actions = {
     setUserProfile: (userProfile: UserProfileModel) => ({
         type: actionTypes.SET_USER_PROFILE,
         payload: userProfile,
+    }),
+    setScrobbleSongResult: (scrobbleSongResult: boolean) => ({
+        type: actionTypes.SET_SCROBBLE_SONG_RESULT,
+        payload: scrobbleSongResult,
+    }),
+    setSyncDetails: (syncDetails: boolean) => ({
+        type: actionTypes.SET_SYNC_DETAILS,
+        payload: syncDetails,
     }),
 };
 
@@ -54,6 +65,34 @@ const getUserProfileAction = () => async (dispatch: AppDispatch) => {
     }
 };
 
+const setScrobblingAction = () => async (dispatch: AppDispatch) => {
+    try {
+        const scrobbling = await setScrobbling();
+        dispatch(actions.setScrobbling(scrobbling));
+    } catch (error) {
+        console.error('Error setting scrobbling status:', error);
+    }
+};
+
+const scrobbleSongAction = () => async (dispatch: AppDispatch) => {
+    try {
+        const result = await scrobbleSong();
+        dispatch(actions.setScrobbleSongResult(result));
+    } catch (error) {
+        console.error('Error setting scrobbled song result:', error);
+    }
+};
+
+const syncWithBackendAction = () => async (dispatch: AppDispatch) => {
+    try {
+        const result = await syncWithBackend();
+        console.log(result);
+        dispatch(actions.setSyncDetails(result));
+    } catch (error) {
+        console.error('Error syncing with backend:', error);
+    }
+};
+
 const reducer = (state = initialState, action: any) => {
     switch (action.type) {
         case actionTypes.SET_ACTIVE_TAB:
@@ -64,6 +103,15 @@ const reducer = (state = initialState, action: any) => {
             return {...state, currentSong: action.payload };
         case actionTypes.SET_USER_PROFILE:
             return {...state, userProfile: action.payload };
+        case actionTypes.SET_SCROBBLE_SONG_RESULT:
+            return {...state, scrobbleSongResult: action.payload };
+        case actionTypes.SET_SYNC_DETAILS:
+            return {
+                ...state,
+                userProfile: action.payload.user,
+                scrobbling: action.payload.is_scrobbling,
+                currentSong: action.payload.current_song,
+            };
         default:
             return state;
     }
@@ -81,5 +129,8 @@ export {
     actions,
     getCurrentSongAction,
     getUserProfileAction,
+    setScrobblingAction,
+    scrobbleSongAction,
+    syncWithBackendAction,
     store
 };
