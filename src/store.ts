@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import {getCurrentSong, getUserProfile, scrobbleSong, setScrobbling, syncWithBackend} from './service.ts';
 import { Song } from "./models/song.model.ts";
 import { UserProfileModel } from "./models/user-profile.model.ts";
+import {SyncResponseModel} from "./models/sync-response.model.ts";
 
 const initialState = {
     activeTab: 'user',
@@ -41,7 +42,7 @@ const actions = {
         type: actionTypes.SET_SCROBBLE_SONG_RESULT,
         payload: scrobbleSongResult,
     }),
-    setSyncDetails: (syncDetails: boolean) => ({
+    setSyncDetails: (syncDetails: SyncResponseModel) => ({
         type: actionTypes.SET_SYNC_DETAILS,
         payload: syncDetails,
     }),
@@ -49,7 +50,7 @@ const actions = {
 
 const getCurrentSongAction = () => async (dispatch: AppDispatch) => {
     try {
-        const currentSong = await getCurrentSong();
+        const currentSong: Song = await getCurrentSong();
         dispatch(actions.setCurrentSong(currentSong));
     } catch (error) {
         console.error('Error fetching current song:', error);
@@ -58,7 +59,7 @@ const getCurrentSongAction = () => async (dispatch: AppDispatch) => {
 
 const getUserProfileAction = () => async (dispatch: AppDispatch) => {
     try {
-        const userProfile = await getUserProfile();
+        const userProfile: UserProfileModel = await getUserProfile();
         dispatch(actions.setUserProfile(userProfile));
     } catch (error) {
         console.error('Error fetching user profile:', error);
@@ -67,7 +68,7 @@ const getUserProfileAction = () => async (dispatch: AppDispatch) => {
 
 const setScrobblingAction = () => async (dispatch: AppDispatch) => {
     try {
-        const scrobbling = await setScrobbling();
+        const scrobbling: boolean = await setScrobbling();
         dispatch(actions.setScrobbling(scrobbling));
     } catch (error) {
         console.error('Error setting scrobbling status:', error);
@@ -76,7 +77,7 @@ const setScrobblingAction = () => async (dispatch: AppDispatch) => {
 
 const scrobbleSongAction = () => async (dispatch: AppDispatch) => {
     try {
-        const result = await scrobbleSong();
+        const result: boolean = await scrobbleSong();
         dispatch(actions.setScrobbleSongResult(result));
     } catch (error) {
         console.error('Error setting scrobbled song result:', error);
@@ -85,8 +86,7 @@ const scrobbleSongAction = () => async (dispatch: AppDispatch) => {
 
 const syncWithBackendAction = () => async (dispatch: AppDispatch) => {
     try {
-        const result = await syncWithBackend();
-        console.log(result);
+        const result: SyncResponseModel = await syncWithBackend();
         dispatch(actions.setSyncDetails(result));
     } catch (error) {
         console.error('Error syncing with backend:', error);

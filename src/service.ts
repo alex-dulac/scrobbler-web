@@ -1,8 +1,9 @@
 import axios from 'axios';
 import {Song} from "./models/song.model.ts";
 import {UserProfileModel} from "./models/user-profile.model.ts";
+import {SyncResponseModel} from "./models/sync-response.model.ts";
 
-const API_BASE_URL = 'http://0.0.0.0:8000/';
+const API_BASE_URL: string = 'http://0.0.0.0:8000/';
 
 const getCurrentSong = async (): Promise<Song> => {
     try {
@@ -44,10 +45,10 @@ const scrobbleSong = async (): Promise<boolean> => {
     }
 };
 
-const syncWithBackend = async (): Promise<boolean> => {
+const syncWithBackend = async (): Promise<SyncResponseModel> => {
     try {
         const response = await axios.get<any>(API_BASE_URL + 'sync');
-        return response.data.result;
+        return response.data;
     } catch (error) {
         console.error('Error getting details from backend:', error);
         throw error;

@@ -42,12 +42,8 @@ const Dashboard: React.FC<DashboardProps> = ({
         setScrobbling();
     }
 
-    const handleInit =  () => {
-        syncWithBackend();
-    }
-
     useEffect(() => {
-        handleInit();
+        syncWithBackend();
     }, []);
 
     useEffect(() => {
