@@ -79,14 +79,13 @@ const Dashboard: React.FC<DashboardProps> = ({
     }, [scrobbling, scrobbleCurrentSong]);
 
     return (
-        <div style={{display: 'flex', height: '600px', width: '800px', border: '1px solid white'}}>
+        <div style={{display: 'flex', flexDirection: 'column', height: '800px', width: '1000px', border: '1px solid rgba(26, 24, 24, 0.87)'}}>
             <div style={{
-                width: '200px',
                 display: 'flex',
-                flexDirection: 'column',
                 justifyContent: 'space-evenly',
                 alignItems: 'center',
-                borderRight: '1px solid white'
+                borderBottom: '1px solid rgba(26, 24, 24, 0.87)',
+                padding: '20px 0'
             }}>
                 <button onClick={() => handleTabClick('user')}>User</button>
                 <button onClick={() => handleTabClick('scrobbler')}>Scrobbler</button>
@@ -104,25 +103,29 @@ const Dashboard: React.FC<DashboardProps> = ({
                     alignItems: 'center',
                     textAlign: 'center'
                 }}>
-                <div>
+                <div style={{
+                    height: '500px'
+                }}>
                     {activeTab === 'user' && <UserProfile/>}
                     {activeTab === 'scrobbler' && <Scrobbler/>}
                     {activeTab === 'analytics' && <Analytics/>}
                 </div>
                 <div style={{
                     width: '100%',
+                    height: '250px',
                     textAlign: 'center',
-                    padding: '1em',
-                    borderTop: '1px solid white'
+                    borderTop: '1px solid rgba(26, 24, 24, 0.87)'
                 }}>
                     {!currentSong ? (
                         <h2>No song playing.</h2>
                     ) : (
                         <div>
                             <h2>Current Song:</h2>
-                            <p>Title: {currentSong.track}</p>
-                            <p>Artist: {currentSong.artist}</p>
-                            <p>Album: {currentSong.album}</p>
+                            <p>{currentSong.name}</p>
+                            <p>{currentSong.artist}</p>
+                            <p>{currentSong.album}</p>
+                            <p style={{visibility: currentSong.scrobbled ? 'visible' : 'hidden'}}>Scrobbled!</p>
+                            <p style={{visibility: !currentSong.playing ? 'visible' : 'hidden'}}>Current song is paused</p>
                         </div>
                     )}
                 </div>

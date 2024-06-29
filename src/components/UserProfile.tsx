@@ -20,7 +20,8 @@ const UserProfile: React.FC<UserProfileProps> = ({userProfile, getUserProfile}) 
             <h2>User Profile</h2>
             {userProfile && (
                 <div>
-                    <p>Name: {userProfile.name}</p>
+                    <h3>{userProfile.name}</h3>
+                    <p><img src={userProfile.image_url} alt={"you"}/></p>
                 </div>
             )}
             {!userProfile && (
