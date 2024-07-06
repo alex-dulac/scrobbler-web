@@ -12,6 +12,7 @@ import UserProfile from './UserProfile.tsx';
 import Scrobbler from './Scrobbler.tsx';
 import Analytics from './Analytics.tsx';
 import { Song } from "../models/song.model.ts";
+import "../style/Dashboard.css"
 
 interface DashboardProps {
     activeTab: string;
@@ -79,55 +80,48 @@ const Dashboard: React.FC<DashboardProps> = ({
     }, [scrobbling, scrobbleCurrentSong]);
 
     return (
-        <div style={{display: 'flex', flexDirection: 'column', height: '800px', width: '1000px', border: '1px solid rgba(26, 24, 24, 0.87)'}}>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-                borderBottom: '1px solid rgba(26, 24, 24, 0.87)',
-                padding: '20px 0'
-            }}>
-                <button onClick={() => handleTabClick('user')}>User</button>
-                <button onClick={() => handleTabClick('scrobbler')}>Scrobbler</button>
-                <button onClick={() => handleTabClick('analytics')}>Analytics</button>
-                <button onClick={() => handleScrobblingStatusChange()}>
-                    {scrobbling ? 'Stop Scrobbling' : 'Start Scrobbling'}
-                </button>
+        <div className={"dashboard-container"}>
+            <div className={"sidebar"}>
+                <ul>
+                    <li>
+                        <button onClick={() => handleTabClick('user')}>User</button>
+                    </li>
+                    <li>
+                        <button onClick={() => handleTabClick('scrobbler')}>Scrobbler</button>
+                    </li>
+                    <li>
+                        <button onClick={() => handleTabClick('analytics')}>Analytics</button>
+                    </li>
+                    <li>
+                        <button onClick={() => handleScrobblingStatusChange()}>
+                            {scrobbling ? 'Stop Scrobbling' : 'Start Scrobbling'}
+                        </button>
+                    </li>
+                </ul>
             </div>
-            <div
-                style={{
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center'
-                }}>
-                <div style={{
-                    height: '500px'
-                }}>
-                    {activeTab === 'user' && <UserProfile/>}
-                    {activeTab === 'scrobbler' && <Scrobbler/>}
-                    {activeTab === 'analytics' && <Analytics/>}
-                </div>
-                <div style={{
-                    width: '100%',
-                    height: '250px',
-                    textAlign: 'center',
-                    borderTop: '1px solid rgba(26, 24, 24, 0.87)'
-                }}>
+            <div className={"main-content"}>
+                <h1>Apple Music Scrobbler</h1>
+                <div className={"card"}>
                     {!currentSong ? (
                         <h2>No song playing.</h2>
                     ) : (
-                        <div>
-                            <h2>Current Song:</h2>
-                            <p>{currentSong.name}</p>
-                            <p>{currentSong.artist}</p>
-                            <p>{currentSong.album}</p>
-                            <p style={{visibility: currentSong.scrobbled ? 'visible' : 'hidden'}}>Scrobbled!</p>
-                            <p style={{visibility: !currentSong.playing ? 'visible' : 'hidden'}}>Current song is paused</p>
+                        <div className="song-card">
+                            <img
+                                src={"https://upload.wikimedia.org/wikipedia/en/thumb/4/4b/Green_Day_-_Dookie_cover.jpg/220px-Green_Day_-_Dookie_cover.jpg"}
+                                alt={`album cover`} className="album-image"/>
+                            <div className="song-info">
+                                <h2>{currentSong.artist}</h2>
+                                <p>{currentSong.name} - {currentSong.album} ({currentSong.year})</p>
+                                <p style={{visibility: currentSong.scrobbled ? 'visible' : 'hidden'}}>Scrobbled!</p>
+                                <p style={{visibility: !currentSong.playing ? 'visible' : 'hidden'}}>Current song is paused</p>
+                            </div>
                         </div>
                     )}
+                </div>
+                <div className={"card"}>
+                    {activeTab === 'user' && <UserProfile/>}
+                    {activeTab === 'scrobbler' && <Scrobbler/>}
+                    {activeTab === 'analytics' && <Analytics/>}
                 </div>
             </div>
         </div>

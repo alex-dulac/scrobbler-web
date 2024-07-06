@@ -1,7 +1,9 @@
-export class SyncResponseModel {
+import {Song} from "./song.model.ts";
+
+export class SyncResponse {
     constructor(
-        public name: string,
-    ) {
-        this.name = name;
-    }
+        public current_song: Song,
+        public is_scrobbling: boolean,
+        public user: any,
+    ) {}
 }

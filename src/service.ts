@@ -1,8 +1,8 @@
 import {Song} from "./models/song.model.ts";
-import {UserProfileModel} from "./models/user-profile.model.ts";
-import {SyncResponseModel} from "./models/sync-response.model.ts";
+import {SyncResponse} from "./models/sync-response.model.ts";
 import apiClient from "./axiosConfig.ts";
 import handleError from "./errorHandler.ts";
+import {UserStats} from "./models/user-stats.model.ts";
 
 const getCurrentSong = async (): Promise<Song> => {
     try {
@@ -13,12 +13,12 @@ const getCurrentSong = async (): Promise<Song> => {
     }
 };
 
-const getUserProfile = async (): Promise<UserProfileModel> => {
+const getUserStats = async (): Promise<UserStats> => {
     try {
         const response = await apiClient.get('user');
         return response.data.user;
     } catch (error) {
-        return handleError(error, 'Error fetching user');
+        return handleError(error, 'Error fetching user stats');
     }
 };
 
@@ -40,13 +40,13 @@ const scrobbleSong = async (): Promise<boolean> => {
     }
 };
 
-const syncWithBackend = async (): Promise<SyncResponseModel> => {
+const syncWithBackend = async (): Promise<SyncResponse> => {
     try {
         const response = await apiClient.get('sync');
         return response.data;
     } catch (error) {
-        return handleError(error, 'Error synciung with backend');
+        return handleError(error, 'Error syncing with backend');
     }
 };
 
-export { getCurrentSong, getUserProfile, setScrobbling, scrobbleSong, syncWithBackend };
+export { getCurrentSong, getUserStats, setScrobbling, scrobbleSong, syncWithBackend };
