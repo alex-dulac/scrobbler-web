@@ -1,4 +1,4 @@
-import {Song} from "./song.model.ts";
+import {Song} from "../song.model.ts";
 
 export class SyncResponse {
     constructor(

@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { getCurrentSong, getUserStats, scrobbleSong, setScrobbling, syncWithBackend } from './service.ts';
 import { Song } from "./models/song.model.ts";
 import { UserModel } from "./models/user.model.ts";
-import { SyncResponse } from "./models/sync-response.model.ts";
+import { SyncResponse } from "./models/responses/sync-response.model.ts";
 import { UserStats } from "./models/user-stats.model.ts";
 
 interface State {

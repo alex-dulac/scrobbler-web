@@ -12,7 +12,7 @@ import UserProfile from './UserProfile.tsx';
 import Scrobbler from './Scrobbler.tsx';
 import Analytics from './Analytics.tsx';
 import { Song } from "../models/song.model.ts";
-import "../style/Dashboard.css"
+import {UserModel} from "../models/user.model.ts";
 
 interface DashboardProps {
     activeTab: string;
@@ -23,6 +23,7 @@ interface DashboardProps {
     setScrobbling: () => void;
     scrobbleCurrentSong: () => Promise<void>;
     syncWithBackend: () => Promise<void>;
+    userProfile: UserModel | null;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -33,7 +34,8 @@ const Dashboard: React.FC<DashboardProps> = ({
     scrobbling,
     setScrobbling,
     scrobbleCurrentSong,
-    syncWithBackend
+    syncWithBackend,
+    userProfile
 }) => {
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
@@ -47,41 +49,38 @@ const Dashboard: React.FC<DashboardProps> = ({
         syncWithBackend();
     }, []);
 
-    useEffect(() => {
-        const getCurrentSongInterval = setInterval(async () => {
-            try {
+    if (import.meta.env.VITE_POLL == true) {
+        useEffect(() => {
+            const getCurrentSongInterval = setInterval(async () => {
                 await getCurrentSong();
-            } catch (error) {
-                console.error('Error getting current song:', error);
-            }
-        }, 5000); // 5 seconds
+            }, 5000); // 5 seconds
 
-        // Clean up the interval when the component unmounts
-        return () => {
-            clearInterval(getCurrentSongInterval);
-        };
-    }, [getCurrentSong]);
+            return () => {
+                clearInterval(getCurrentSongInterval);
+            };
+        }, [getCurrentSong]);
+    }
 
     useEffect(() => {
         const scrobbleInterval = setInterval(async () => {
-            if (scrobbling) {
-                try {
-                    await scrobbleCurrentSong();
-                } catch (error) {
-                    console.error('Error scrobbling current song:', error);
-                }
+            if (currentSong && scrobbling) {
+                await scrobbleCurrentSong();
             }
         }, 30000); // 30 seconds
 
-        // Clean up the interval when the component unmounts
         return () => {
             clearInterval(scrobbleInterval);
         };
-    }, [scrobbling, scrobbleCurrentSong]);
+    }, [currentSong, scrobbling, scrobbleCurrentSong]);
 
     return (
         <div className={"dashboard-container"}>
             <div className={"sidebar"}>
+                <div className="sidebar-profile">
+                    <h2>{userProfile ? userProfile.name : 'Guest'}</h2>
+                    <img src={userProfile ? userProfile.imageUrl : 'placeholder-image-url.jpg'}
+                         alt={userProfile ? userProfile.name : ''} className="sidebar-profile-image"/>
+                </div>
                 <ul>
                     <li>
                         <button onClick={() => handleTabClick('user')}>User</button>
@@ -93,17 +92,16 @@ const Dashboard: React.FC<DashboardProps> = ({
                         <button onClick={() => handleTabClick('analytics')}>Analytics</button>
                     </li>
                     <li>
-                        <button onClick={() => handleScrobblingStatusChange()}>
+                        <button onClick={() => handleScrobblingStatusChange()} className={scrobbling ? "italic" : ""}>
                             {scrobbling ? 'Stop Scrobbling' : 'Start Scrobbling'}
                         </button>
                     </li>
                 </ul>
             </div>
             <div className={"main-content"}>
-                <h1>Apple Music Scrobbler</h1>
                 <div className={"card"}>
                     {!currentSong ? (
-                        <h2>No song playing.</h2>
+                        <h2 className={"italic"}>No song playing.</h2>
                     ) : (
                         <div className="song-card">
                             <img
