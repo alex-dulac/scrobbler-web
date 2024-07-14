@@ -1,9 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { getCurrentSong, getUserStats, scrobbleSong, setScrobbling, syncWithBackend } from './service.ts';
+import {getCurrentSong, getUser, getUserPlaycount, scrobbleSong, setScrobbling, syncState} from './api/service.ts';
 import { Song } from "./models/song.model.ts";
 import { UserModel } from "./models/user.model.ts";
-import { SyncResponse } from "./models/responses/sync-response.model.ts";
-import { UserStats } from "./models/user-stats.model.ts";
+import { SyncStateResponse } from "./models/responses/sync-response.model.ts";
 
 interface State {
     activeTab: string;
@@ -21,135 +20,131 @@ const initialState: State = {
     scrobbleSongResult: null,
 };
 
-const actionTypes = {
-    SET_ACTIVE_TAB: 'SET_ACTIVE_TAB',
-    SET_SCROBBLING: 'SET_SCROBBLING',
-    SET_CURRENT_SONG: 'SET_CURRENT_SONG',
-    SET_USER_STATS: 'SET_USER_STATS',
-    SET_SCROBBLE_SONG_RESULT: 'SET_SCROBBLE_SONG_RESULT',
-    SET_SYNC_DETAILS: 'SET_SYNC_DETAILS',
-};
+const SET_ACTIVE_TAB: string = 'SET_ACTIVE_TAB';
+const SET_SCROBBLING: string = 'SET_SCROBBLING';
+const SET_CURRENT_SONG: string = 'SET_CURRENT_SONG';
+const SET_USER: string = 'SET_USER';
+const SET_USER_PLAYCOUNT: string = 'SET_USER_PLAYCOUNT';
+const SET_SCROBBLE_SONG_RESULT: string = 'SET_SCROBBLE_SONG_RESULT';
+const SET_SYNC_DETAILS: string = 'SET_SYNC_DETAILS';
 
 const actions = {
     setActiveTab: (tab: string) => ({
-        type: actionTypes.SET_ACTIVE_TAB,
+        type: SET_ACTIVE_TAB,
         payload: tab,
     }),
     setScrobbling: (scrobbling: boolean) => ({
-        type: actionTypes.SET_SCROBBLING,
+        type: SET_SCROBBLING,
         payload: scrobbling,
     }),
+    setUser: (user: any) => ({
+        type: SET_SCROBBLING,
+        payload: user,
+    }),
+    setUserPlaycount: (playcount: string) => ({
+        type: SET_USER_PLAYCOUNT,
+        payload: playcount,
+    }),
     setCurrentSong: (song: Song) => ({
-        type: actionTypes.SET_CURRENT_SONG,
+        type: SET_CURRENT_SONG,
         payload: song,
     }),
-    setUserProfile: (userStats: UserStats) => ({
-        type: actionTypes.SET_USER_STATS,
-        payload: userStats,
-    }),
     setScrobbleSongResult: (scrobbleSongResult: boolean) => ({
-        type: actionTypes.SET_SCROBBLE_SONG_RESULT,
+        type: SET_SCROBBLE_SONG_RESULT,
         payload: scrobbleSongResult,
     }),
-    setSyncDetails: (syncDetails: SyncResponse) => ({
-        type: actionTypes.SET_SYNC_DETAILS,
+    setSyncDetails: (syncDetails: SyncStateResponse) => ({
+        type: SET_SYNC_DETAILS,
         payload: syncDetails,
     }),
 };
 
 const getCurrentSongAction = () => async (dispatch: AppDispatch) => {
-    try {
-        const currentSong: Song = await getCurrentSong();
-        dispatch(actions.setCurrentSong(currentSong));
-    } catch (error) {
-        console.error('Error fetching current song:', error);
-    }
-};
-
-const getUserStatsAction = () => async (dispatch: AppDispatch) => {
-    try {
-        const userStats: UserStats = await getUserStats();
-        dispatch(actions.setUserProfile(userStats));
-    } catch (error) {
-        console.error('Error fetching user profile:', error);
-    }
+    const currentSong: Song = await getCurrentSong();
+    dispatch(actions.setCurrentSong(currentSong));
 };
 
 const setScrobblingAction = () => async (dispatch: AppDispatch) => {
-    try {
-        const scrobbling: boolean = await setScrobbling();
-        dispatch(actions.setScrobbling(scrobbling));
-    } catch (error) {
-        console.error('Error setting scrobbling status:', error);
-    }
+    const scrobbling: boolean = await setScrobbling();
+    dispatch(actions.setScrobbling(scrobbling));
+};
+
+const getUserAction = () => async (dispatch: AppDispatch) => {
+    const user: any = await getUser();
+    dispatch(actions.setUser(user));
+};
+
+const getUserPlaycountAction = () => async (dispatch: AppDispatch) => {
+    const userPlaycount: string = await getUserPlaycount();
+    dispatch(actions.setUserPlaycount(userPlaycount));
 };
 
 const scrobbleSongAction = () => async (dispatch: AppDispatch) => {
-    try {
-        const result: boolean = await scrobbleSong();
-        dispatch(actions.setScrobbleSongResult(result));
-    } catch (error) {
-        console.error('Error setting scrobbled song result:', error);
-    }
+    const result: boolean = await scrobbleSong();
+    dispatch(actions.setScrobbleSongResult(result));
 };
 
 const syncWithBackendAction = () => async (dispatch: AppDispatch) => {
-    try {
-        const result: SyncResponse = await syncWithBackend();
-        dispatch(actions.setSyncDetails(result));
-    } catch (error) {
-        console.error('Error syncing with backend:', error);
-    }
+    const result: SyncStateResponse = await syncState();
+    dispatch(actions.setSyncDetails(result));
 };
 
 const reducer = (state: State = initialState, action: any) => {
     switch (action.type) {
-        case actionTypes.SET_ACTIVE_TAB:
+        case SET_ACTIVE_TAB:
             return {
                 ...state,
                 activeTab: action.payload
             };
 
-        case actionTypes.SET_SCROBBLING:
+        case SET_SCROBBLING:
             return {
                 ...state,
                 scrobbling: action.payload
             };
 
-        case actionTypes.SET_CURRENT_SONG:
+        case SET_CURRENT_SONG:
             return {
                 ...state,
                 currentSong: action.payload
             };
 
-        case actionTypes.SET_USER_STATS:
+        case SET_USER:
             return {
                 ...state,
                 userProfile: {
                     ...state.userProfile,
-                    stats: {
-                        playCount: action.payload.playcount,
-                        recentTracks: action.payload.recent_tracks
-                    },
+                    name: action.payload.name,
+                    lastFmUrl: action.payload.url,
+                    imageUrl: action.payload.image_url,
                 }
             };
 
-        case actionTypes.SET_SCROBBLE_SONG_RESULT:
+        case SET_USER_PLAYCOUNT:
+            return {
+                ...state,
+                userProfile: {
+                    ...state.userProfile,
+                    playcount: action.payload
+                }
+            };
+
+        case SET_SCROBBLE_SONG_RESULT:
             return {
                 ...state,
                 scrobbleSongResult: action.payload
             };
 
-        case actionTypes.SET_SYNC_DETAILS:
-            const syncDetails = action.payload as SyncResponse;
+        case SET_SYNC_DETAILS:
+            const syncDetails = action.payload as SyncStateResponse;
 
             return {
                 ...state,
                 userProfile: {
+                    ...state.userProfile,
                     name: syncDetails.user.name,
                     lastFmUrl: syncDetails.user.url,
                     imageUrl: syncDetails.user.image_url,
-                    stats: syncDetails.user.stats,
                 },
                 scrobbling: syncDetails.is_scrobbling,
                 currentSong: syncDetails.current_song,
@@ -168,11 +163,11 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export {
-    actionTypes,
     actions,
     getCurrentSongAction,
-    getUserStatsAction,
     setScrobblingAction,
+    getUserAction,
+    getUserPlaycountAction,
     scrobbleSongAction,
     syncWithBackendAction,
     store

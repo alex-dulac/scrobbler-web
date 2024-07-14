@@ -14,6 +14,8 @@ import Analytics from './Analytics.tsx';
 import { Song } from "../models/song.model.ts";
 import {UserModel} from "../models/user.model.ts";
 
+const POLL: boolean = import.meta.env.VITE_POLL;
+
 interface DashboardProps {
     activeTab: string;
     setActiveTab: (tab: string) => void;
@@ -49,7 +51,7 @@ const Dashboard: React.FC<DashboardProps> = ({
         syncWithBackend();
     }, []);
 
-    if (import.meta.env.VITE_POLL == true) {
+    if (POLL) {
         useEffect(() => {
             const getCurrentSongInterval = setInterval(async () => {
                 await getCurrentSong();

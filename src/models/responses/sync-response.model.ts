@@ -1,6 +1,6 @@
 import {Song} from "../song.model.ts";
 
-export class SyncResponse {
+export class SyncStateResponse {
     constructor(
         public current_song: Song,
         public is_scrobbling: boolean,
