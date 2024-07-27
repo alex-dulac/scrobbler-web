@@ -1,6 +1,6 @@
 import {LastFmTrack} from "./lastfm-track.model.ts";
 
-export class UserModel {
+export class User {
     constructor(
         public name?: string,
         public lastFmUrl?: string,

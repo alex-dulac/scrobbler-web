@@ -1,22 +1,22 @@
 import { configureStore } from '@reduxjs/toolkit';
 import {getCurrentSong, getUser, getUserPlaycount, scrobbleSong, setScrobbling, syncState} from './api/service.ts';
 import { Song } from "./models/song.model.ts";
-import { UserModel } from "./models/user.model.ts";
+import { User } from "./models/user.model.ts";
 import { SyncStateResponse } from "./models/responses/sync-response.model.ts";
 
 interface State {
     activeTab: string;
     scrobbling: boolean | null;
     currentSong: Song | null;
-    userProfile: UserModel | null;
+    user: User | null;
     scrobbleSongResult: boolean | null;
 }
 
 const initialState: State = {
-    activeTab: 'scrobbler',
+    activeTab: 'recent',
     scrobbling: null,
     currentSong: null,
-    userProfile: null,
+    user: null,
     scrobbleSongResult: null,
 };
 
@@ -112,8 +112,8 @@ const reducer = (state: State = initialState, action: any) => {
         case SET_USER:
             return {
                 ...state,
-                userProfile: {
-                    ...state.userProfile,
+                user: {
+                    ...state.user,
                     name: action.payload.name,
                     lastFmUrl: action.payload.url,
                     imageUrl: action.payload.image_url,
@@ -123,8 +123,8 @@ const reducer = (state: State = initialState, action: any) => {
         case SET_USER_PLAYCOUNT:
             return {
                 ...state,
-                userProfile: {
-                    ...state.userProfile,
+                user: {
+                    ...state.user,
                     playcount: action.payload
                 }
             };
@@ -140,8 +140,8 @@ const reducer = (state: State = initialState, action: any) => {
 
             return {
                 ...state,
-                userProfile: {
-                    ...state.userProfile,
+                user: {
+                    ...state.user,
                     name: syncDetails.user.name,
                     lastFmUrl: syncDetails.user.url,
                     imageUrl: syncDetails.user.image_url,

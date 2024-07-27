@@ -1,14 +1,86 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import { store } from './store';
-import Dashboard from './components/Dashboard.tsx';
+import React, {useEffect} from 'react';
+import {connect} from 'react-redux';
+import {AppDispatch, getCurrentSongAction, RootState, scrobbleSongAction, syncWithBackendAction} from './store';
+import Sidebar from "./components/Sidebar.tsx";
+import Content from "./components/Content.tsx";
+import {Song} from "./models/song.model.ts";
 
-const App: React.FC = () => {
-    return (
-        <Provider store={store}>
-            <Dashboard />
-        </Provider>
-    );
+const POLL: boolean = import.meta.env.VITE_POLL;
+
+interface AppProps {
+  currentSong: Song | null;
+  getCurrentSong: () => Promise<void>;
+  scrobbling: boolean;
+  scrobbleCurrentSong: () => Promise<void>;
+  syncWithBackend: () => Promise<void>;
+}
+
+const App: React.FC<AppProps> = ({
+  currentSong,
+  getCurrentSong,
+  scrobbling,
+  scrobbleCurrentSong,
+  syncWithBackend,
+}) => {
+  useEffect(() => {
+    syncWithBackend();
+  }, []);
+
+  if (POLL) {
+    useEffect(() => {
+      const getCurrentSongInterval = setInterval(async () => {
+        await getCurrentSong();
+      }, 5000); // 5 seconds
+
+      return () => {
+        clearInterval(getCurrentSongInterval);
+      };
+    }, [getCurrentSong]);
+  }
+
+  useEffect(() => {
+    const scrobbleInterval = setInterval(async () => {
+      if (currentSong && scrobbling) {
+        await scrobbleCurrentSong();
+      }
+    }, 30000); // 30 seconds
+
+    return () => {
+      clearInterval(scrobbleInterval);
+    };
+  }, [currentSong, scrobbling, scrobbleCurrentSong]);
+
+  const backgroundImage = 'https://images.csmonitor.com/csm/2017/03/1032430_1_Chuck%20Berry%20influence_standard.jpg?alias=standard_900x600nc';
+  const backgroundStyle = {
+    background: `
+    linear-gradient(to top, rgba(255, 255, 255, 1) 0%, 
+    rgba(255, 255, 255, 0) 75%), 
+    url(${backgroundImage}) top center no-repeat
+    `,
+    backgroundSize: 'cover'
+  };
+
+  return (
+    <div className={"App"}>
+      <div className={"background-image"} style={backgroundStyle}>
+        <div className={"main-container"}>
+          <Sidebar/>
+          <Content/>
+        </div>
+      </div>
+    </div>
+  );
 };
 
-export default App;
+const mapStateToProps = (state: RootState) => ({
+  currentSong: state.currentSong,
+  scrobbling: state.scrobbling,
+});
+
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+  getCurrentSong: () => dispatch(getCurrentSongAction()),
+  syncWithBackend: () => dispatch(syncWithBackendAction()),
+  scrobbleCurrentSong: () => dispatch(scrobbleSongAction()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
