@@ -19,27 +19,27 @@
      <div className="content-header">
        <button
          onClick={() => handleTabClick('recent')}
-         className={activeTab === 'recent'? 'active' : ''}> Recent Tracks
+         className={activeTab === 'recent' ? 'active' : ''}> Recent Tracks
        </button>
        <button
          onClick={() => handleTabClick('recent')}
-         className={activeTab === 'recent' ? 'active' : ''}> Library
+         className={activeTab === 'recent' ? 'active' : ''}> Tab 2
        </button>
        <button
          onClick={() => handleTabClick('recent')}
-         className={activeTab === 'recent' ? 'active' : ''}> Library
+         className={activeTab === 'recent' ? 'active' : ''}> Tab 3
        </button>
        <button
          onClick={() => handleTabClick('recent')}
-         className={activeTab === 'recent' ? 'active' : ''}> Library
+         className={activeTab === 'recent' ? 'active' : ''}> Tab 3
        </button>
        <button
          onClick={() => handleTabClick('recent')}
-         className={activeTab === 'recent' ? 'active' : ''}> Library
+         className={activeTab === 'recent' ? 'active' : ''}> Tab 4
        </button>
        <button
          onClick={() => handleTabClick('recent')}
-         className={activeTab === 'recent' ? 'active' : ''}> Library
+         className={activeTab === 'recent' ? 'active' : ''}> Tab 5
        </button>
      </div>
    );

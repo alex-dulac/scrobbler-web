@@ -1,22 +1,39 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {User} from "../models/user.model.ts";
-import {AppDispatch, RootState, setScrobblingAction} from "../store.ts";
+import {AppDispatch, getUserPlaycountAction, RootState, setScrobblingAction} from "../store.ts";
 import {connect} from "react-redux";
 
 interface SidebarProps {
+  getUserPlaycount: () => Promise<void>;
   scrobbling: boolean;
   setScrobbling: () => void;
   user: User | null;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
+  getUserPlaycount,
   scrobbling,
   setScrobbling,
   user,
 }) => {
+  useEffect(() => {
+    getUserPlaycount();
+
+    const getUserPlaycountInterval = setInterval(async () => {
+      await getUserPlaycount();
+    }, 120000); // 2 min
+
+    return () => {
+      clearInterval(getUserPlaycountInterval);
+    };
+  }, [getUserPlaycount]);
 
   const handleScrobblingStatusChange = () => {
     setScrobbling();
+  }
+
+  const handleContentFocus = (content: string) => {
+    console.log(content)
   }
 
   return (
@@ -26,18 +43,20 @@ const Sidebar: React.FC<SidebarProps> = ({
              alt={'profile'} className="sidebar-profile-image"/>
         <h2>{user?.name}</h2>
         <div className="stats">
-          <div> tracks played</div>
-          <div> loved tracks</div>
-          <div> posts</div>
+          <div>Playcount: {user ? user.playcount : 'unknown'}</div>
         </div>
       </div>
       <nav className="nav">
         <ul>
-          <li>Library</li>
-          <li>Friends</li>
-          <li>Tracks</li>
-          <li>Albums</li>
-          <li>Charts</li>
+          <li>
+            <button onClick={() => handleContentFocus('last_fm')}>LastFM</button>
+          </li>
+          <li>
+            <button onClick={() => handleContentFocus('apple')}>Apple Music</button>
+          </li>
+          <li>
+            <button onClick={() => handleContentFocus('spotify')}>Spotify</button>
+          </li>
           <li>
             <button onClick={() => handleScrobblingStatusChange()} className={scrobbling ? "italic" : ""}>
               {scrobbling ? 'Scrobbling' : 'Not Scrobbling'}
@@ -55,6 +74,7 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
+  getUserPlaycount: () => dispatch(getUserPlaycountAction()),
   setScrobbling: () => dispatch(setScrobblingAction()),
 })
 

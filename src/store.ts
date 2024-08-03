@@ -1,13 +1,23 @@
 import { configureStore } from '@reduxjs/toolkit';
-import {getCurrentSong, getUser, getUserPlaycount, scrobbleSong, setScrobbling, syncState} from './api/service.ts';
+import {
+    getCurrentSong,
+    getRecentTracks,
+    getUser,
+    getUserPlaycount,
+    scrobbleSong,
+    setScrobbling,
+    syncState
+} from './api/service.ts';
 import { Song } from "./models/song.model.ts";
 import { User } from "./models/user.model.ts";
 import { SyncStateResponse } from "./models/responses/sync-response.model.ts";
+import {LastFmAlbum} from "./models/lastfm-album.model.ts";
 
 interface State {
     activeTab: string;
     scrobbling: boolean | null;
     currentSong: Song | null;
+    lastfmAlbum: LastFmAlbum | null;
     user: User | null;
     scrobbleSongResult: boolean | null;
 }
@@ -16,6 +26,7 @@ const initialState: State = {
     activeTab: 'recent',
     scrobbling: null,
     currentSong: null,
+    lastfmAlbum: null,
     user: null,
     scrobbleSongResult: null,
 };
@@ -25,6 +36,7 @@ const SET_SCROBBLING: string = 'SET_SCROBBLING';
 const SET_CURRENT_SONG: string = 'SET_CURRENT_SONG';
 const SET_USER: string = 'SET_USER';
 const SET_USER_PLAYCOUNT: string = 'SET_USER_PLAYCOUNT';
+const SET_USER_RECENT_TRACKS: string = 'SET_USER_RECENT_TRACKS';
 const SET_SCROBBLE_SONG_RESULT: string = 'SET_SCROBBLE_SONG_RESULT';
 const SET_SYNC_DETAILS: string = 'SET_SYNC_DETAILS';
 
@@ -45,9 +57,13 @@ const actions = {
         type: SET_USER_PLAYCOUNT,
         payload: playcount,
     }),
-    setCurrentSong: (song: Song) => ({
+    setUserRecentTracks: (recentTracks: []) => ({
+        type: SET_USER_RECENT_TRACKS,
+        payload: recentTracks,
+    }),
+    setCurrentSong: (response: any) => ({
         type: SET_CURRENT_SONG,
-        payload: song,
+        payload: response,
     }),
     setScrobbleSongResult: (scrobbleSongResult: boolean) => ({
         type: SET_SCROBBLE_SONG_RESULT,
@@ -60,8 +76,8 @@ const actions = {
 };
 
 const getCurrentSongAction = () => async (dispatch: AppDispatch) => {
-    const currentSong: Song = await getCurrentSong();
-    dispatch(actions.setCurrentSong(currentSong));
+    const currentSongResponse = await getCurrentSong();
+    dispatch(actions.setCurrentSong(currentSongResponse));
 };
 
 const setScrobblingAction = () => async (dispatch: AppDispatch) => {
@@ -77,6 +93,11 @@ const getUserAction = () => async (dispatch: AppDispatch) => {
 const getUserPlaycountAction = () => async (dispatch: AppDispatch) => {
     const userPlaycount: string = await getUserPlaycount();
     dispatch(actions.setUserPlaycount(userPlaycount));
+};
+
+const getUserRecentTracksAction = () => async (dispatch: AppDispatch) => {
+    const recentTracks: [] = await getRecentTracks();
+    dispatch(actions.setUserRecentTracks(recentTracks));
 };
 
 const scrobbleSongAction = () => async (dispatch: AppDispatch) => {
@@ -106,7 +127,14 @@ const reducer = (state: State = initialState, action: any) => {
         case SET_CURRENT_SONG:
             return {
                 ...state,
-                currentSong: action.payload
+                currentSong: action.payload.current_song,
+                lastfmAlbum: {
+                    title: action.payload.lastfm_album.title,
+                    imageUrl: action.payload.lastfm_album.image_url,
+                    releaseDate: action.payload.lastfm_album.release_date,
+                    tracks: action.payload.lastfm_album.tracks,
+                    url: action.payload.lastfm_album.url,
+                },
             };
 
         case SET_USER:
@@ -129,6 +157,15 @@ const reducer = (state: State = initialState, action: any) => {
                 }
             };
 
+        case SET_USER_RECENT_TRACKS:
+            return {
+               ...state,
+                user: {
+                   ...state.user,
+                    recentTracks: action.payload
+                }
+            };
+
         case SET_SCROBBLE_SONG_RESULT:
             return {
                 ...state,
@@ -148,6 +185,13 @@ const reducer = (state: State = initialState, action: any) => {
                 },
                 scrobbling: syncDetails.is_scrobbling,
                 currentSong: syncDetails.current_song,
+                lastfmAlbum: {
+                    title: syncDetails.lastfm_album.title,
+                    imageUrl: syncDetails.lastfm_album.image_url,
+                    releaseDate: syncDetails.lastfm_album.release_date,
+                    tracks: syncDetails.lastfm_album.tracks,
+                    url: syncDetails.lastfm_album.url,
+                },
             };
 
         default:
@@ -168,6 +212,7 @@ export {
     setScrobblingAction,
     getUserAction,
     getUserPlaycountAction,
+    getUserRecentTracksAction,
     scrobbleSongAction,
     syncWithBackendAction,
     store

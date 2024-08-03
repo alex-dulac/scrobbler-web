@@ -17,7 +17,7 @@ const syncState = async (): Promise<SyncStateResponse> => {
 const getCurrentSong = async (): Promise<Song> => {
     try {
         const response = await apiClient.get(routes.POLL);
-        return response.data.current_song;
+        return response.data;
     } catch (error) {
         return handleError(error, 'Error fetching current song');
     }
