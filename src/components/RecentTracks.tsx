@@ -25,12 +25,11 @@ const RecentTracks: React.FC<RecentTracksProps> = ({currentSong, getUserRecentTr
     <div className="latest-tracks">
       {!!user && (
         <>
-          <h2>Latest played tracks</h2>
+          <h2 className={"widget-header"}>Recent tracks</h2>
           {!!user.recentTracks && user.recentTracks.length > 0 ? (
             <>
-              <p>Recent tracks:</p>
               {user.recentTracks.map(([track, album]: [LastFmTrack, LastFmAlbum], i: number) => (
-                <div className="track" key={i}>
+                <div className="track border-bottom" key={i}>
                   <img src={album.imageUrl} alt="Album Cover" className="track-cover"></img>
                   <div className="track-info">
                     <div className="track-title-details">
@@ -42,7 +41,6 @@ const RecentTracks: React.FC<RecentTracksProps> = ({currentSong, getUserRecentTr
                     </div>
                     <div className="track-time">{track.scrobbledAt}</div>
                   </div>
-
                 </div>
               ))}
             </>

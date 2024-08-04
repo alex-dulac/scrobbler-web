@@ -45,7 +45,7 @@ const App: React.FC<AppProps> = ({
 
   useEffect(() => {
     const scrobbleInterval = setInterval(async () => {
-      if (currentSong && scrobbling) {
+      if (scrobbling && currentSong && !currentSong.scrobbled) {
         await scrobbleCurrentSong();
       }
     }, 30000); // 30 seconds
@@ -53,7 +53,7 @@ const App: React.FC<AppProps> = ({
     return () => {
       clearInterval(scrobbleInterval);
     };
-  }, [currentSong, scrobbling, scrobbleCurrentSong]);
+  }, [scrobbleCurrentSong]);
 
   useEffect(() => {
     const backgroundImage: string = lastfmAlbum ? lastfmAlbum.imageUrl : '';

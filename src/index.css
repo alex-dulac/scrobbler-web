@@ -40,7 +40,7 @@ button {
   border-radius: 10px;
   overflow: hidden;
   height: 90%;
-  width: 90%;
+  width: 80%;
   margin: auto;
 }
 
@@ -172,4 +172,12 @@ button {
   font-size: 12px;
   color: #999;
   align-self: flex-end; /* Align the time to the right */
+}
+
+.widget-header {
+  border-bottom: 1px solid #ddd;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  padding: 20px;
+  text-align: left;
 }
