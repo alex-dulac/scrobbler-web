@@ -129,11 +129,11 @@ const reducer = (state: State = initialState, action: any) => {
                 ...state,
                 currentSong: action.payload.current_song,
                 lastfmAlbum: {
-                    title: action.payload.lastfm_album.title,
-                    imageUrl: action.payload.lastfm_album.image_url,
-                    releaseDate: action.payload.lastfm_album.release_date,
-                    tracks: action.payload.lastfm_album.tracks,
-                    url: action.payload.lastfm_album.url,
+                    title: action.payload.lastfm_album?.title,
+                    imageUrl: action.payload.lastfm_album?.image_url,
+                    releaseDate: action.payload.lastfm_album?.release_date,
+                    tracks: action.payload.lastfm_album?.tracks,
+                    url: action.payload.lastfm_album?.url,
                 },
             };
 
@@ -158,11 +158,16 @@ const reducer = (state: State = initialState, action: any) => {
             };
 
         case SET_USER_RECENT_TRACKS:
+            const transformedPayload = action.payload.map(([track, album]: [any, any]) => [
+                { ...track, scrobbledAt: track.scrobbled_at },
+                { ...album, imageUrl: album.image_url }
+            ]);
+
             return {
                ...state,
                 user: {
                    ...state.user,
-                    recentTracks: action.payload
+                    recentTracks: transformedPayload
                 }
             };
 
@@ -186,11 +191,11 @@ const reducer = (state: State = initialState, action: any) => {
                 scrobbling: syncDetails.is_scrobbling,
                 currentSong: syncDetails.current_song,
                 lastfmAlbum: {
-                    title: syncDetails.lastfm_album.title,
-                    imageUrl: syncDetails.lastfm_album.image_url,
-                    releaseDate: syncDetails.lastfm_album.release_date,
-                    tracks: syncDetails.lastfm_album.tracks,
-                    url: syncDetails.lastfm_album.url,
+                    title: syncDetails.lastfm_album?.title,
+                    imageUrl: syncDetails.lastfm_album?.image_url,
+                    releaseDate: syncDetails.lastfm_album?.release_date,
+                    tracks: syncDetails.lastfm_album?.tracks,
+                    url: syncDetails.lastfm_album?.url,
                 },
             };
 

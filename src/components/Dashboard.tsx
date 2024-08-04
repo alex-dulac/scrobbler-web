@@ -10,7 +10,7 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({activeTab}) => {
     return (
       <div className="widget">
-          {activeTab === 'recent' && <RecentTracks/>}
+          {activeTab === 'recent' && <RecentTracks />}
       </div>
     );
 };

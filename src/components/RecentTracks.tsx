@@ -8,6 +8,7 @@ import {
 } from "../store.ts";
 import {connect} from "react-redux";
 import {Song} from "../models/song.model.ts";
+import {LastFmAlbum} from "../models/lastfm-album.model.ts";
 
 interface RecentTracksProps {
   currentSong: Song | null;
@@ -28,8 +29,21 @@ const RecentTracks: React.FC<RecentTracksProps> = ({currentSong, getUserRecentTr
           {!!user.recentTracks && user.recentTracks.length > 0 ? (
             <>
               <p>Recent tracks:</p>
-              {user.recentTracks.map((track: LastFmTrack, i: number) => (
-                <p key={i}>{track.name} - {track.artist} from {track.album} at {track.scrobbledAt}</p>
+              {user.recentTracks.map(([track, album]: [LastFmTrack, LastFmAlbum], i: number) => (
+                <div className="track" key={i}>
+                  <img src={album.imageUrl} alt="Album Cover" className="track-cover"></img>
+                  <div className="track-info">
+                    <div className="track-title-details">
+                      <div className="track-title">{track.name}</div>
+                      <div className="track-details">
+                        <span className="track-artist">{track.artist}</span>
+                        <span className="track-album">{album.title}</span>
+                      </div>
+                    </div>
+                    <div className="track-time">{track.scrobbledAt}</div>
+                  </div>
+
+                </div>
               ))}
             </>
           ) : (

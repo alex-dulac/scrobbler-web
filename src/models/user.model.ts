@@ -1,4 +1,5 @@
 import {LastFmTrack} from "./lastfm-track.model.ts";
+import {LastFmAlbum} from "./lastfm-album.model.ts";
 
 export class User {
     constructor(
@@ -6,7 +7,7 @@ export class User {
         public lastFmUrl?: string,
         public imageUrl?: string,
         public playcount?: number,
-        public recentTracks?: LastFmTrack[]
+        public recentTracks?: [LastFmTrack, LastFmAlbum][]
     ) {
         this.name = name;
         this.lastFmUrl = lastFmUrl;
