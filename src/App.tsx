@@ -53,7 +53,7 @@ const App: React.FC<AppProps> = ({
     return () => {
       clearInterval(scrobbleInterval);
     };
-  }, [scrobbleCurrentSong]);
+  }, [scrobbleCurrentSong, scrobbling]);
 
   useEffect(() => {
     const backgroundImage: string = lastfmAlbum ? lastfmAlbum.imageUrl : '';

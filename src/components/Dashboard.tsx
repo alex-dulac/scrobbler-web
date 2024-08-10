@@ -2,21 +2,22 @@ import React from 'react';
 import RecentTracks from "./RecentTracks.tsx";
 import {RootState} from "../store.ts";
 import {connect} from "react-redux";
+import {dashboardTypes} from "../constants.ts";
 
 interface DashboardProps {
-    activeTab: string;
+  activeLastFmTab: string;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({activeTab}) => {
-    return (
-      <div className="widget">
-          {activeTab === 'recent' && <RecentTracks />}
-      </div>
-    );
+const Dashboard: React.FC<DashboardProps> = ({activeLastFmTab}) => {
+  return (
+    <div className="widget">
+        {activeLastFmTab === dashboardTypes.RECENT_TRACKS && <RecentTracks />}
+    </div>
+  );
 };
 
 const mapStateToProps = (state: RootState) => ({
-    activeTab: state.activeTab,
+  activeLastFmTab: state.activeLastFmTab,
 })
 
 export default connect(mapStateToProps)(Dashboard);

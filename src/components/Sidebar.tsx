@@ -1,11 +1,13 @@
 import React, {useEffect} from 'react';
 import {User} from "../models/user.model.ts";
-import {AppDispatch, getUserPlaycountAction, RootState, setScrobblingAction} from "../store.ts";
+import {actions, AppDispatch, getUserPlaycountAction, RootState, setScrobblingAction} from "../store.ts";
 import {connect} from "react-redux";
+import {contentTypes} from "../constants.ts";
 
 interface SidebarProps {
   getUserPlaycount: () => Promise<void>;
   scrobbling: boolean;
+  setContentFocus: (tab: string) => void;
   setScrobbling: () => void;
   user: User | null;
 }
@@ -13,6 +15,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({
   getUserPlaycount,
   scrobbling,
+  setContentFocus,
   setScrobbling,
   user,
 }) => {
@@ -33,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   }
 
   const handleContentFocus = (content: string) => {
-    console.log(content)
+    setContentFocus(content);
   }
 
   return (
@@ -49,13 +52,13 @@ const Sidebar: React.FC<SidebarProps> = ({
       <nav className="nav">
         <ul>
           <li>
-            <button onClick={() => handleContentFocus('last_fm')}>LastFM</button>
+            <button onClick={() => handleContentFocus(contentTypes.LAST_FM)}>LastFM</button>
           </li>
           <li>
-            <button onClick={() => handleContentFocus('apple')}>Apple Music</button>
+            <button onClick={() => handleContentFocus(contentTypes.APPLE)}>Apple Music</button>
           </li>
           <li>
-            <button onClick={() => handleContentFocus('spotify')}>Spotify</button>
+            <button onClick={() => handleContentFocus(contentTypes.SPOTIFY)}>Spotify</button>
           </li>
           <li>
             <button onClick={() => handleScrobblingStatusChange()} className={scrobbling ? "italic" : ""}>
@@ -75,6 +78,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
   getUserPlaycount: () => dispatch(getUserPlaycountAction()),
+  setContentFocus: (tab: string) => dispatch(actions.setContentFocus(tab)),
   setScrobbling: () => dispatch(setScrobblingAction()),
 })
 

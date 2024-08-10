@@ -12,9 +12,11 @@ import { Song } from "./models/song.model.ts";
 import { User } from "./models/user.model.ts";
 import { SyncStateResponse } from "./models/responses/sync-response.model.ts";
 import {LastFmAlbum} from "./models/lastfm-album.model.ts";
+import {contentTypes, dashboardTypes} from "./constants.ts";
 
 interface State {
-    activeTab: string;
+    activeLastFmTab: string;
+    contentFocus: string;
     scrobbling: boolean | null;
     currentSong: Song | null;
     lastfmAlbum: LastFmAlbum | null;
@@ -23,7 +25,8 @@ interface State {
 }
 
 const initialState: State = {
-    activeTab: 'recent',
+    activeLastFmTab: dashboardTypes.RECENT_TRACKS,
+    contentFocus: contentTypes.LAST_FM,
     scrobbling: null,
     currentSong: null,
     lastfmAlbum: null,
@@ -31,7 +34,8 @@ const initialState: State = {
     scrobbleSongResult: null,
 };
 
-const SET_ACTIVE_TAB: string = 'SET_ACTIVE_TAB';
+const SET_ACTIVE_LAST_FM_TAB: string = 'SET_ACTIVE_LAST_FM_TAB';
+const SET_CONTENT_FOCUS: string = 'SET_CONTENT_FOCUS';
 const SET_SCROBBLING: string = 'SET_SCROBBLING';
 const SET_CURRENT_SONG: string = 'SET_CURRENT_SONG';
 const SET_USER: string = 'SET_USER';
@@ -41,9 +45,13 @@ const SET_SCROBBLE_SONG_RESULT: string = 'SET_SCROBBLE_SONG_RESULT';
 const SET_SYNC_DETAILS: string = 'SET_SYNC_DETAILS';
 
 const actions = {
-    setActiveTab: (tab: string) => ({
-        type: SET_ACTIVE_TAB,
+    setActiveLastFmTab: (tab: string) => ({
+        type: SET_ACTIVE_LAST_FM_TAB,
         payload: tab,
+    }),
+    setContentFocus: (content: string) => ({
+        type: SET_CONTENT_FOCUS,
+        payload: content,
     }),
     setScrobbling: (scrobbling: boolean) => ({
         type: SET_SCROBBLING,
@@ -112,10 +120,16 @@ const syncWithBackendAction = () => async (dispatch: AppDispatch) => {
 
 const reducer = (state: State = initialState, action: any) => {
     switch (action.type) {
-        case SET_ACTIVE_TAB:
+        case SET_ACTIVE_LAST_FM_TAB:
             return {
                 ...state,
-                activeTab: action.payload
+                activeLastFmTab: action.payload
+            };
+
+        case SET_CONTENT_FOCUS:
+            return {
+                ...state,
+                contentFocus: action.payload
             };
 
         case SET_SCROBBLING:
