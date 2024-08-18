@@ -21,6 +21,7 @@ export class Song {
         public album_disliked: boolean,
         public playing: boolean,
         public scrobbled: boolean,
+        public artwork_data: string,
     ) {
         this.id = id;
         this.index = index;
@@ -43,5 +44,6 @@ export class Song {
         this.album_disliked = album_disliked;
         this.playing = playing;
         this.scrobbled = scrobbled;
+        this.artwork_data = artwork_data;
     }
 }

@@ -6,4 +6,6 @@ export const contentTypes = {
 
 export const dashboardTypes = {
   RECENT_TRACKS: 'recent_tracks',
+  CURRENT_SONG: 'current_song',
+  ACCOUNT: 'account',
 }

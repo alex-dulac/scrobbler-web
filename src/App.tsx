@@ -56,6 +56,7 @@ const App: React.FC<AppProps> = ({
   }, [scrobbleCurrentSong, scrobbling]);
 
   useEffect(() => {
+    // const backgroundImage: string = currentSong ? currentSong.artwork_data : '';
     const backgroundImage: string = lastfmAlbum ? lastfmAlbum.imageUrl : '';
 
     const backgroundStyle: React.CSSProperties = {

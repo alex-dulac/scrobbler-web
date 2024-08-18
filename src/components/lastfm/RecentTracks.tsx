@@ -1,14 +1,14 @@
 import React, {useEffect} from "react";
-import {LastFmTrack} from "../models/lastfm-track.model.ts";
-import {User} from "../models/user.model.ts";
+import {LastFmTrack} from "../../models/lastfm-track.model.ts";
+import {User} from "../../models/user.model.ts";
 import {
   AppDispatch,
   getUserRecentTracksAction,
   RootState,
-} from "../store.ts";
+} from "../../store.ts";
 import {connect} from "react-redux";
-import {Song} from "../models/song.model.ts";
-import {LastFmAlbum} from "../models/lastfm-album.model.ts";
+import {Song} from "../../models/song.model.ts";
+import {LastFmAlbum} from "../../models/lastfm-album.model.ts";
 
 interface RecentTracksProps {
   currentSong: Song | null;
@@ -22,7 +22,7 @@ const RecentTracks: React.FC<RecentTracksProps> = ({currentSong, getUserRecentTr
   }, [currentSong?.scrobbled == true]);
 
   return (
-    <div className="latest-tracks">
+    <div>
       {!!user && (
         <>
           <h2 className={"widget-header"}>Recent tracks</h2>
@@ -45,7 +45,7 @@ const RecentTracks: React.FC<RecentTracksProps> = ({currentSong, getUserRecentTr
               ))}
             </>
           ) : (
-            <p>No recent tracks available.</p>
+            <p>Loading...</p>
           )}
         </>
       )}

@@ -1,9 +1,11 @@
 import React from 'react';
-import DashboardHeader from "./DashboardHeader.tsx";
-import Dashboard from "./Dashboard.tsx";
+import DashboardHeader from "./lastfm/DashboardHeader.tsx";
+import Dashboard from "./lastfm/Dashboard.tsx";
 import {RootState} from "../store.ts";
 import {connect} from "react-redux";
 import {contentTypes} from "../constants.ts";
+import AppleAccount from "./accounts/AppleAccount.tsx";
+import SpotifyAccount from "./accounts/SpotifyAccount.tsx";
 
 interface ContentProps {
   contentFocus: string;
@@ -23,15 +25,11 @@ const Content: React.FC<ContentProps> = ({
       )}
 
       {contentFocus === contentTypes.APPLE && (
-        <>
-          <Dashboard />
-        </>
+        <AppleAccount />
       )}
 
       {contentFocus === contentTypes.SPOTIFY && (
-        <>
-          <Dashboard />
-        </>
+        <SpotifyAccount />
       )}
     </div>
   );

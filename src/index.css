@@ -107,12 +107,8 @@ button {
   margin-top: 20px;
   flex-grow: 1; /* Ensure the widget takes the remaining space */
   overflow-y: auto;
-}
-
-.latest-tracks {
   background-color: #F5F5F5;
   padding: 20px;
-  border-radius: 5px;
 }
 
 .track {
