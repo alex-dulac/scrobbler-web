@@ -1,11 +1,9 @@
-import {Song} from "../models/song.model.ts";
-import {SyncStateResponse} from "../models/responses/sync-response.model.ts";
 import apiClient from "../helpers/axiosConfig.ts";
 import handleError from "../helpers/errorHandler.ts";
 import * as routes from "./routes.ts";
 
 
-const syncState = async (): Promise<SyncStateResponse> => {
+const syncState = async (): Promise<any> => {
     try {
         const response = await apiClient.get(routes.STATE);
         return response.data;
@@ -14,10 +12,19 @@ const syncState = async (): Promise<SyncStateResponse> => {
     }
 };
 
-const getCurrentSong = async (): Promise<Song> => {
+const getCurrentSong = async (): Promise<any> => {
     try {
         const response = await apiClient.get(routes.POLL);
-        return response.data;
+        return response.data.data;
+    } catch (error) {
+        return handleError(error, 'Error fetching current song');
+    }
+};
+
+const getCurrentSongScrobbles = async (): Promise<any> => {
+    try {
+        const response = await apiClient.get(routes.USER_CURRENT_TRACK_SCROBBLES);
+        return response.data.scrobbles;
     } catch (error) {
         return handleError(error, 'Error fetching current song');
     }
@@ -107,6 +114,7 @@ const scrobbleStatus = async (): Promise<boolean> => {
 export {
     syncState,
     getCurrentSong,
+    getCurrentSongScrobbles,
     getUser,
     getRecentTracks,
     getLovedTracks,

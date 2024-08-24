@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import {
     getCurrentSong,
     getRecentTracks,
-    getUser,
     getUserPlaycount,
     scrobbleSong,
     setScrobbling,
@@ -10,9 +9,9 @@ import {
 } from './api/service.ts';
 import { Song } from "./models/song.model.ts";
 import { User } from "./models/user.model.ts";
-import { SyncStateResponse } from "./models/responses/sync-response.model.ts";
-import {LastFmAlbum} from "./models/lastfm-album.model.ts";
-import {contentTypes, dashboardTypes} from "./constants.ts";
+import { LastFmAlbum } from "./models/lastfm-album.model.ts";
+import { contentTypes, dashboardTypes } from "./constants.ts";
+import { mapKeysToCamelCase } from "./helpers/utils.ts";
 
 interface State {
     activeLastFmTab: string;
@@ -38,7 +37,6 @@ const SET_ACTIVE_LAST_FM_TAB: string = 'SET_ACTIVE_LAST_FM_TAB';
 const SET_CONTENT_FOCUS: string = 'SET_CONTENT_FOCUS';
 const SET_SCROBBLING: string = 'SET_SCROBBLING';
 const SET_CURRENT_SONG: string = 'SET_CURRENT_SONG';
-const SET_USER: string = 'SET_USER';
 const SET_USER_PLAYCOUNT: string = 'SET_USER_PLAYCOUNT';
 const SET_USER_RECENT_TRACKS: string = 'SET_USER_RECENT_TRACKS';
 const SET_SCROBBLE_SONG_RESULT: string = 'SET_SCROBBLE_SONG_RESULT';
@@ -57,10 +55,6 @@ const actions = {
         type: SET_SCROBBLING,
         payload: scrobbling,
     }),
-    setUser: (user: any) => ({
-        type: SET_SCROBBLING,
-        payload: user,
-    }),
     setUserPlaycount: (playcount: string) => ({
         type: SET_USER_PLAYCOUNT,
         payload: playcount,
@@ -77,7 +71,7 @@ const actions = {
         type: SET_SCROBBLE_SONG_RESULT,
         payload: scrobbleSongResult,
     }),
-    setSyncDetails: (syncDetails: SyncStateResponse) => ({
+    setSyncDetails: (syncDetails: any) => ({
         type: SET_SYNC_DETAILS,
         payload: syncDetails,
     }),
@@ -85,17 +79,13 @@ const actions = {
 
 const getCurrentSongAction = () => async (dispatch: AppDispatch) => {
     const currentSongResponse = await getCurrentSong();
-    dispatch(actions.setCurrentSong(currentSongResponse));
+    const currentSong = mapKeysToCamelCase(currentSongResponse);
+    dispatch(actions.setCurrentSong(currentSong));
 };
 
 const setScrobblingAction = () => async (dispatch: AppDispatch) => {
     const scrobbling: boolean = await setScrobbling();
     dispatch(actions.setScrobbling(scrobbling));
-};
-
-const getUserAction = () => async (dispatch: AppDispatch) => {
-    const user: any = await getUser();
-    dispatch(actions.setUser(user));
 };
 
 const getUserPlaycountAction = () => async (dispatch: AppDispatch) => {
@@ -114,8 +104,9 @@ const scrobbleSongAction = () => async (dispatch: AppDispatch) => {
 };
 
 const syncWithBackendAction = () => async (dispatch: AppDispatch) => {
-    const result: SyncStateResponse = await syncState();
-    dispatch(actions.setSyncDetails(result));
+    const result = await syncState();
+    const state = mapKeysToCamelCase(result);
+    dispatch(actions.setSyncDetails(state));
 };
 
 const reducer = (state: State = initialState, action: any) => {
@@ -141,25 +132,7 @@ const reducer = (state: State = initialState, action: any) => {
         case SET_CURRENT_SONG:
             return {
                 ...state,
-                currentSong: action.payload.current_song,
-                lastfmAlbum: {
-                    title: action.payload.lastfm_album?.title,
-                    imageUrl: action.payload.lastfm_album?.image_url,
-                    releaseDate: action.payload.lastfm_album?.release_date,
-                    tracks: action.payload.lastfm_album?.tracks,
-                    url: action.payload.lastfm_album?.url,
-                },
-            };
-
-        case SET_USER:
-            return {
-                ...state,
-                user: {
-                    ...state.user,
-                    name: action.payload.name,
-                    lastFmUrl: action.payload.url,
-                    imageUrl: action.payload.image_url,
-                }
+                ...action.payload
             };
 
         case SET_USER_PLAYCOUNT:
@@ -192,25 +165,10 @@ const reducer = (state: State = initialState, action: any) => {
             };
 
         case SET_SYNC_DETAILS:
-            const syncDetails = action.payload as SyncStateResponse;
-
             return {
                 ...state,
-                user: {
-                    ...state.user,
-                    name: syncDetails.user.name,
-                    lastFmUrl: syncDetails.user.url,
-                    imageUrl: syncDetails.user.image_url,
-                },
-                scrobbling: syncDetails.is_scrobbling,
-                currentSong: syncDetails.current_song,
-                lastfmAlbum: {
-                    title: syncDetails.lastfm_album?.title,
-                    imageUrl: syncDetails.lastfm_album?.image_url,
-                    releaseDate: syncDetails.lastfm_album?.release_date,
-                    tracks: syncDetails.lastfm_album?.tracks,
-                    url: syncDetails.lastfm_album?.url,
-                },
+                ...action.payload,
+                scrobbling: action.payload.isScrobbling,
             };
 
         default:
@@ -229,7 +187,6 @@ export {
     actions,
     getCurrentSongAction,
     setScrobblingAction,
-    getUserAction,
     getUserPlaycountAction,
     getUserRecentTracksAction,
     scrobbleSongAction,

@@ -19,7 +19,7 @@ interface RecentTracksProps {
 const RecentTracks: React.FC<RecentTracksProps> = ({currentSong, getUserRecentTracks, user}) => {
   useEffect(() => {
     getUserRecentTracks();
-  }, [currentSong?.scrobbled == true]);
+  }, [currentSong?.scrobbled]);
 
   return (
     <div>

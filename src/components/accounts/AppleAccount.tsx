@@ -1,12 +1,17 @@
-import React from 'react';
-import {RootState} from "../store.ts";
+import React, {useEffect} from 'react';
+
 import {connect} from "react-redux";
+import {RootState} from "../../store.ts";
 
 interface AppleAccountProps {
 
 }
 
 const AppleAccount: React.FC<AppleAccountProps> = ({ }) => {
+  useEffect(() => {
+
+  }, []);
+
   return (
     <div className={"widget"}>
       <h2 className={"widget-header"}>Apple Account</h2>

@@ -3,47 +3,47 @@ export class Song {
         public id: number,
         public index: number,
         public name: string,
-        public persistent_id: string,
+        public persistentId: string,
         public time: string,
         public duration: number,
         public artist: string,
-        public album_artist: string,
+        public albumArtist: string,
         public composer: string,
         public album: string,
         public genre: string,
-        public track_number: number,
-        public disc_number: number,
+        public trackNumber: number,
+        public discNumber: number,
         public year: number,
-        public release_date: string,
+        public releaseDate: string,
         public loved: boolean,
         public disliked: boolean,
-        public album_loved: boolean,
-        public album_disliked: boolean,
+        public albumLoved: boolean,
+        public albumDisliked: boolean,
         public playing: boolean,
         public scrobbled: boolean,
-        public artwork_data: string,
+        public artworkData: string,
     ) {
         this.id = id;
         this.index = index;
         this.name = name;
-        this.persistent_id = persistent_id;
+        this.persistentId = persistentId;
         this.time = time;
         this.duration = duration;
         this.artist = artist;
-        this.album_artist = album_artist;
+        this.albumArtist = albumArtist;
         this.composer = composer;
         this.album = album;
         this.genre = genre;
-        this.track_number = track_number;
-        this.disc_number = disc_number;
+        this.trackNumber = trackNumber;
+        this.discNumber = discNumber;
         this.year = year;
-        this.release_date = release_date;
+        this.releaseDate = releaseDate;
         this.loved = loved;
         this.disliked = disliked;
-        this.album_loved = album_loved;
-        this.album_disliked = album_disliked;
+        this.albumLoved = albumLoved;
+        this.albumDisliked = albumDisliked;
         this.playing = playing;
         this.scrobbled = scrobbled;
-        this.artwork_data = artwork_data;
+        this.artworkData = artworkData;
     }
 }

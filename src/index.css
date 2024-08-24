@@ -39,13 +39,13 @@ button {
   background-color: rgba(255, 255, 255, 0.8); /* Adds a semi-transparent white background to the main container */
   border-radius: 10px;
   overflow: hidden;
-  height: 90%;
+  height: 80%;
   width: 80%;
   margin: auto;
 }
 
 .sidebar {
-  width: 300px;
+  width: 200px;
   background-color: #F5F5F5;
   padding: 20px;
   display: flex;

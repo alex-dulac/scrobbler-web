@@ -13,9 +13,12 @@ interface CurrentSongProps {
 
 const CurrentSong: React.FC<CurrentSongProps> = ({currentSong}) => {
   return (
-    <div className={"now-playing-widget"}>
+    <div className={"current-song-widget"}>
       {!!currentSong && (
-        <p>{currentSong.name}</p>
+        <>
+          <p>{currentSong.name}</p>
+          <ScrobbleLineChart data={graphData} />
+        </>
       )}
       {!currentSong && (
         <div>
