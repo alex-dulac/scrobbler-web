@@ -168,6 +168,11 @@ const reducer = (state: State = initialState, action: any) => {
             return {
                 ...state,
                 ...action.payload,
+                user: {
+                    ...state.user,
+                    ...action.payload.user,
+                    recentTracks: state.user?.recentTracks, // Preserve the existing recentTracks
+                },
                 scrobbling: action.payload.isScrobbling,
             };
 

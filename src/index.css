@@ -39,17 +39,22 @@ button {
   background-color: rgba(255, 255, 255, 0.8); /* Adds a semi-transparent white background to the main container */
   border-radius: 10px;
   overflow: hidden;
-  height: 80%;
-  width: 80%;
+  height: 90%;
+  width: 90%;
   margin: auto;
 }
 
 .sidebar {
-  width: 200px;
+  width: 250px;
   background-color: #F5F5F5;
   padding: 20px;
   display: flex;
   flex-direction: column;
+  height: 100%; /* Ensure the sidebar takes up the full height */
+}
+
+.sidebar-buttons {
+  flex-grow: 1;
 }
 
 .profile-summary {
@@ -64,6 +69,15 @@ button {
 
 .profile-summary .stats {
   margin-top: 10px;
+}
+
+.now-playing-widget {
+  padding: 20px;
+}
+
+.now-playing-widget img {
+  width: 200px;
+  height: 200px;
 }
 
 .nav ul {

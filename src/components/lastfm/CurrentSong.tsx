@@ -16,18 +16,18 @@ const CurrentSong: React.FC<CurrentSongProps> = ({currentSong}) => {
   const [graphData, setGraphData] = useState(null);
 
   useEffect(() => {
-    if (currentSong) {
+    if (currentSong && graphData == null) {
       getCurrentSongScrobbles().then(scrobbles => {
-        let graphData = [];
+        let data: {timestamp: string, count: number}[] = [];
 
         scrobbles.forEach(scrobble => {
-          graphData.push({
-            timestamp: scrobble.timestamp,
+          data.push({
+            timestamp: scrobble.scrobbled_at,
             count: 1,
           })
         })
 
-        setGraphData(graphData);
+        setGraphData(data);
       });
     } else {
       setGraphData(null);
@@ -44,7 +44,7 @@ const CurrentSong: React.FC<CurrentSongProps> = ({currentSong}) => {
       )}
       {!currentSong && (
         <div>
-          <h2>Loading...</h2>
+          <h2>No Current Song...</h2>
         </div>
       )}
     </div>

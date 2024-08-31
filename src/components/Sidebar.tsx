@@ -3,8 +3,11 @@ import {User} from "../models/user.model.ts";
 import {actions, AppDispatch, getUserPlaycountAction, RootState, setScrobblingAction} from "../store.ts";
 import {connect} from "react-redux";
 import {contentTypes} from "../constants.ts";
+import {Song} from "../models/song.model.ts";
+import NowPlayingWidget from "./NowPlaying.tsx";
 
 interface SidebarProps {
+  currentSong: Song | null;
   getUserPlaycount: () => Promise<void>;
   scrobbling: boolean;
   setContentFocus: (tab: string) => void;
@@ -42,14 +45,13 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside className="sidebar">
       <div className="profile-summary">
-        <img src={user ? user.imageUrl : 'placeholder-image-url.jpg'}
-             alt={'profile'} className="sidebar-profile-image"/>
+        <img src={user ? user.imageUrl : 'placeholder-image-url.jpg'} alt={'profile'} className="sidebar-profile-image"/>
         <h2>{user?.name}</h2>
         <div className="stats">
           <div>Playcount: {user ? user.playcount : 'unknown'}</div>
         </div>
       </div>
-      <nav className="nav">
+      <nav className="nav sidebar-buttons">
         <ul>
           <li>
             <button onClick={() => handleContentFocus(contentTypes.LAST_FM)}>LastFM</button>
@@ -67,6 +69,9 @@ const Sidebar: React.FC<SidebarProps> = ({
           </li>
         </ul>
       </nav>
+
+      <NowPlayingWidget />
+
     </aside>
   );
 };

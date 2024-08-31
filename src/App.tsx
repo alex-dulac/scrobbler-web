@@ -55,21 +55,21 @@ const App: React.FC<AppProps> = ({
     };
   }, [scrobbleCurrentSong, scrobbling]);
 
-  useEffect(() => {
-    // const backgroundImage: string = currentSong ? currentSong.artwork_data : '';
-    const backgroundImage: string = lastfmAlbum ? lastfmAlbum.imageUrl : '';
-
-    const backgroundStyle: React.CSSProperties = {
-      backgroundImage: `
-      linear-gradient(to top, rgba(255, 255, 255, 1) 0%, 
-      rgba(255, 255, 255, 0) 75%), 
-      url(${backgroundImage})
-      `,
-      backgroundPosition: 'top center',
-    };
-
-    setBackgroundStyle(backgroundStyle);
-  }, [lastfmAlbum]);
+  // TODO I don't really like this. Do something else.
+  // useEffect(() => {
+  //   const backgroundImage: string = lastfmAlbum ? lastfmAlbum.imageUrl : '';
+  //
+  //   const backgroundStyle: React.CSSProperties = {
+  //     backgroundImage: `
+  //     linear-gradient(to top, rgba(255, 255, 255, 1) 0%,
+  //     rgba(255, 255, 255, 0) 75%),
+  //     url(${backgroundImage})
+  //     `,
+  //     backgroundPosition: 'top center',
+  //   };
+  //
+  //   setBackgroundStyle(backgroundStyle);
+  // }, [lastfmAlbum]);
 
   return (
     <div className={"App"}>

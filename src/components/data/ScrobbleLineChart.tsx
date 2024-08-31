@@ -7,7 +7,6 @@ interface ScrobbleLineChartProps {
 
 const ScrobbleLineChart: React.FC<ScrobbleLineChartProps> = ({ data }) => {
   if (!data || data.length === 0) return null;
-  console.log(data);
 
   return (
     <ResponsiveContainer width="100%" height={400}>
