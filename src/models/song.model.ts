@@ -22,6 +22,7 @@ export class Song {
         public playing: boolean,
         public scrobbled: boolean,
         public artworkData: string,
+        public scrobbles: [] | null = null
     ) {
         this.id = id;
         this.index = index;
@@ -45,5 +46,6 @@ export class Song {
         this.playing = playing;
         this.scrobbled = scrobbled;
         this.artworkData = artworkData;
+        this.scrobbles = scrobbles;
     }
 }

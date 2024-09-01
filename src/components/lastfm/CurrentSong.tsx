@@ -1,37 +1,22 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {
-  AppDispatch,
+  AppDispatch, getCurrentSongScrobblesAction,
   RootState,
 } from "../../store.ts";
 import {connect} from "react-redux";
 import {Song} from "../../models/song.model.ts";
 import ScrobbleLineChart from "../data/ScrobbleLineChart.tsx";
-import {getCurrentSongScrobbles} from "../../api/service.ts";
+import ScrobbleBarChart from "../data/ScrobbleBarChart.tsx";
 
 interface CurrentSongProps {
   currentSong: Song | null;
+  currentSongScrobbles: [] | null;
+  getCurrentSongScrobbles: () => Promise<void>;
 }
 
-const CurrentSong: React.FC<CurrentSongProps> = ({currentSong}) => {
-  const [graphData, setGraphData] = useState(null);
-
+const CurrentSong: React.FC<CurrentSongProps> = ({currentSong, currentSongScrobbles, getCurrentSongScrobbles}) => {
   useEffect(() => {
-    if (currentSong && graphData == null) {
-      getCurrentSongScrobbles().then(scrobbles => {
-        let data: {timestamp: string, count: number}[] = [];
-
-        scrobbles.forEach(scrobble => {
-          data.push({
-            timestamp: scrobble.scrobbled_at,
-            count: 1,
-          })
-        })
-
-        setGraphData(data);
-      });
-    } else {
-      setGraphData(null);
-    }
+    getCurrentSongScrobbles();
   }, [currentSong?.id]);
 
   return (
@@ -39,7 +24,8 @@ const CurrentSong: React.FC<CurrentSongProps> = ({currentSong}) => {
       {!!currentSong && (
         <>
           <p>{currentSong.name}</p>
-          <ScrobbleLineChart data={graphData} />
+          <ScrobbleLineChart data={currentSongScrobbles} />
+          <ScrobbleBarChart data={currentSongScrobbles} />
         </>
       )}
       {!currentSong && (
@@ -53,10 +39,11 @@ const CurrentSong: React.FC<CurrentSongProps> = ({currentSong}) => {
 
 const mapStateToProps = (state: RootState) => ({
   currentSong: state.currentSong,
+  currentSongScrobbles: state.currentSongScrobbles,
 })
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
-
+  getCurrentSongScrobbles: () => dispatch(getCurrentSongScrobblesAction()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CurrentSong);

@@ -1,11 +1,11 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-interface ScrobbleLineChartProps {
+interface ScrobbleBarChartProps {
   data: { x: string, y: number }[] | null;
 }
 
-const ScrobbleLineChart: React.FC<ScrobbleLineChartProps> = ({ data }) => {
+const ScrobbleBarChart: React.FC<ScrobbleBarChartProps> = ({ data }) => {
   if (!data) return (
     <div>No data...</div>
   );
@@ -16,21 +16,23 @@ const ScrobbleLineChart: React.FC<ScrobbleLineChartProps> = ({ data }) => {
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <LineChart
+      <BarChart
         data={data}
         margin={{
           top: 5, right: 30, left: 20, bottom: 5,
         }}
+        barCategoryGap="20%"
+        barGap={2}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="timestamp" />
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="count" stroke="#8884d8" activeDot={{ r: 8 }} />
-      </LineChart>
+        <Bar dataKey="count" fill="#8884d8" />
+      </BarChart>
     </ResponsiveContainer>
   );
 }
 
-export default ScrobbleLineChart;
+export default ScrobbleBarChart;

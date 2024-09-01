@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import {
-    getCurrentSong,
+    getCurrentSong, getCurrentSongScrobbles,
     getRecentTracks,
     getUserPlaycount,
     scrobbleSong,
@@ -16,27 +16,30 @@ import { mapKeysToCamelCase } from "./helpers/utils.ts";
 interface State {
     activeLastFmTab: string;
     contentFocus: string;
-    scrobbling: boolean | null;
     currentSong: Song | null;
+    currentSongScrobbles: {timestamp: string, count: number}[] | null;
     lastfmAlbum: LastFmAlbum | null;
-    user: User | null;
+    scrobbling: boolean | null;
     scrobbleSongResult: boolean | null;
+    user: User | null;
 }
 
 const initialState: State = {
     activeLastFmTab: dashboardTypes.RECENT_TRACKS,
     contentFocus: contentTypes.LAST_FM,
-    scrobbling: null,
     currentSong: null,
+    currentSongScrobbles: null,
     lastfmAlbum: null,
-    user: null,
+    scrobbling: null,
     scrobbleSongResult: null,
+    user: null,
 };
 
 const SET_ACTIVE_LAST_FM_TAB: string = 'SET_ACTIVE_LAST_FM_TAB';
 const SET_CONTENT_FOCUS: string = 'SET_CONTENT_FOCUS';
 const SET_SCROBBLING: string = 'SET_SCROBBLING';
 const SET_CURRENT_SONG: string = 'SET_CURRENT_SONG';
+const SET_CURRENT_SONG_SCROBBLES: string = 'SET_CURRENT_SONG_SCROBBLES';
 const SET_USER_PLAYCOUNT: string = 'SET_USER_PLAYCOUNT';
 const SET_USER_RECENT_TRACKS: string = 'SET_USER_RECENT_TRACKS';
 const SET_SCROBBLE_SONG_RESULT: string = 'SET_SCROBBLE_SONG_RESULT';
@@ -67,6 +70,10 @@ const actions = {
         type: SET_CURRENT_SONG,
         payload: response,
     }),
+    setCurrentSongScrobbles: (data: any[]) => ({
+        type: SET_CURRENT_SONG_SCROBBLES,
+        payload: data,
+    }),
     setScrobbleSongResult: (scrobbleSongResult: boolean) => ({
         type: SET_SCROBBLE_SONG_RESULT,
         payload: scrobbleSongResult,
@@ -81,6 +88,21 @@ const getCurrentSongAction = () => async (dispatch: AppDispatch) => {
     const currentSongResponse = await getCurrentSong();
     const currentSong = mapKeysToCamelCase(currentSongResponse);
     dispatch(actions.setCurrentSong(currentSong));
+};
+
+const getCurrentSongScrobblesAction = () => async (dispatch: AppDispatch) => {
+    const currentSongScrobblesResponse = await getCurrentSongScrobbles();
+    const currentSongScrobbles = mapKeysToCamelCase(currentSongScrobblesResponse);
+
+    const data: { timestamp: any; count: number; }[]= [];
+    currentSongScrobbles.forEach((scrobble: { scrobbledAt: any; }) => {
+        data.push({
+            timestamp: scrobble.scrobbledAt,
+            count: 1,
+        })
+    })
+
+    dispatch(actions.setCurrentSongScrobbles(data));
 };
 
 const setScrobblingAction = () => async (dispatch: AppDispatch) => {
@@ -133,6 +155,12 @@ const reducer = (state: State = initialState, action: any) => {
             return {
                 ...state,
                 ...action.payload
+            };
+
+        case SET_CURRENT_SONG_SCROBBLES:
+            return {
+                ...state,
+                currentSongScrobbles: action.payload
             };
 
         case SET_USER_PLAYCOUNT:
@@ -191,6 +219,7 @@ export type AppDispatch = typeof store.dispatch;
 export {
     actions,
     getCurrentSongAction,
+    getCurrentSongScrobblesAction,
     setScrobblingAction,
     getUserPlaycountAction,
     getUserRecentTracksAction,
