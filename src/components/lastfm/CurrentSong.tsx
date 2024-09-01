@@ -5,12 +5,16 @@ import {
 } from "../../store.ts";
 import {connect} from "react-redux";
 import {Song} from "../../models/song.model.ts";
-import ScrobbleLineChart from "../data/ScrobbleLineChart.tsx";
 import ScrobbleBarChart from "../data/ScrobbleBarChart.tsx";
+
+export interface Scrobble {
+  timestamp: string;
+  count: number;
+}
 
 interface CurrentSongProps {
   currentSong: Song | null;
-  currentSongScrobbles: [] | null;
+  currentSongScrobbles: Scrobble[] | null;
   getCurrentSongScrobbles: () => Promise<void>;
 }
 
@@ -19,13 +23,17 @@ const CurrentSong: React.FC<CurrentSongProps> = ({currentSong, currentSongScrobb
     getCurrentSongScrobbles();
   }, [currentSong?.id]);
 
+  const sortedScrobbles =
+    currentSongScrobbles?.slice().sort((a, b) =>
+      new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+    ?? [];
+
   return (
     <div className={"current-song-widget"}>
       {!!currentSong && (
         <>
           <p>{currentSong.name}</p>
-          <ScrobbleLineChart data={currentSongScrobbles} />
-          <ScrobbleBarChart data={currentSongScrobbles} />
+          <ScrobbleBarChart data={sortedScrobbles} />
         </>
       )}
       {!currentSong && (
