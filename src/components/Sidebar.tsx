@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {contentTypes} from "../constants.ts";
 import {Song} from "../models/song.model.ts";
 import NowPlayingWidget from "./NowPlaying.tsx";
+import ActionNotification from "./ActionNotification.tsx";
 
 interface SidebarProps {
   currentSong: Song | null;
@@ -71,6 +72,8 @@ const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       <NowPlayingWidget />
+
+      <ActionNotification />
 
     </aside>
   );

@@ -32,13 +32,15 @@ const CurrentSong: React.FC<CurrentSongProps> = ({currentSong, currentSongScrobb
     <div className={"current-song-widget"}>
       {!!currentSong && (
         <>
-          <p>{currentSong.name}</p>
-          <ScrobbleBarChart data={sortedScrobbles} />
+          <h2 className={"widget-header"}>
+            {currentSong.name}
+          </h2>
+          <ScrobbleBarChart data={sortedScrobbles}/>
         </>
       )}
       {!currentSong && (
         <div>
-          <h2>No Current Song...</h2>
+        <h2>No Current Song...</h2>
         </div>
       )}
     </div>

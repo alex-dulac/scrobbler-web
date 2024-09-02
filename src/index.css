@@ -191,3 +191,14 @@ button {
   padding: 20px;
   text-align: left;
 }
+
+.action-notification {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  text-align: center;
+  height: 100px;
+}
