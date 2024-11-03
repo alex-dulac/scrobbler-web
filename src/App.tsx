@@ -45,7 +45,7 @@ const App: React.FC<AppProps> = ({
 
   useEffect(() => {
     const scrobbleInterval = setInterval(async () => {
-      if (scrobbling && currentSong && !currentSong.scrobbled) {
+      if (scrobbling && currentSong?.scrobbled == false) {
         await scrobbleCurrentSong();
       }
     }, 30000); // 30 seconds
@@ -53,7 +53,7 @@ const App: React.FC<AppProps> = ({
     return () => {
       clearInterval(scrobbleInterval);
     };
-  }, [scrobbleCurrentSong, scrobbling]);
+  }, [scrobbleCurrentSong, scrobbling, currentSong?.scrobbled]);
 
   // TODO I don't really like this. Do something else.
   // useEffect(() => {
