@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  AppDispatch,
+  ActionProcessingState,
   RootState,
   SET_CURRENT_SONG,
   SET_CURRENT_SONG_SCROBBLES,
@@ -10,7 +10,7 @@ import {
 import {connect} from "react-redux";
 
 interface ActionNotificationProps {
-  actionProcessing: { [key: string]: boolean };
+  actionProcessing: ActionProcessingState
 }
 
 const ActionNotification: React.FC<ActionNotificationProps> = ({ actionProcessing }) => {
@@ -37,8 +37,4 @@ const mapStateToProps = (state: RootState) => ({
   actionProcessing: state.actionProcessing,
 })
 
-const mapDispatchToProps = (dispatch: AppDispatch) => ({
-
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(ActionNotification);
+export default connect(mapStateToProps)(ActionNotification);

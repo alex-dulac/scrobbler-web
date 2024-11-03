@@ -12,6 +12,7 @@ import { User } from "./models/user.model.ts";
 import { LastFmAlbum } from "./models/lastfm-album.model.ts";
 import { contentTypes, dashboardTypes } from "./constants.ts";
 import { mapKeysToCamelCase } from "./helpers/utils.ts";
+import { USER_RECENT_TRACKS } from "./api/routes.ts";
 
 interface State {
   activeLastFmTab: string;
@@ -37,6 +38,11 @@ const initialState: State = {
   user: null,
 };
 
+export interface ActionProcessingState {
+  actionName: string;
+  processing: boolean;
+}
+
 export const SET_ACTIVE_LAST_FM_TAB: string = 'SET_ACTIVE_LAST_FM_TAB';
 export const SET_ACTION_PROCESSING: string = 'SET_ACTION_PROCESSING';
 export const SET_CONTENT_FOCUS: string = 'SET_CONTENT_FOCUS';
@@ -53,9 +59,9 @@ const actions = {
       type: SET_ACTIVE_LAST_FM_TAB,
       payload: tab,
   }),
-  setActionProcessing: (actionName: string, processing: boolean) => ({
+  setActionProcessing: (action: ActionProcessingState) => ({
       type: SET_ACTION_PROCESSING,
-      payload: { actionName, processing },
+      payload: action,
   }),
   setContentFocus: (content: string) => ({
       type: SET_CONTENT_FOCUS,
@@ -92,19 +98,19 @@ const actions = {
 };
 
 const getCurrentSongAction = () => async (dispatch: AppDispatch) => {
-  dispatch(actions.setActionProcessing(SET_CURRENT_SONG, true));
+  dispatch(actions.setActionProcessing({actionName: SET_CURRENT_SONG, processing: true}));
 
   try {
       const currentSongResponse = await getCurrentSong();
       const currentSong = mapKeysToCamelCase(currentSongResponse);
       dispatch(actions.setCurrentSong(currentSong));
   } finally {
-      dispatch(actions.setActionProcessing(SET_CURRENT_SONG, false));
+      dispatch(actions.setActionProcessing({actionName: SET_CURRENT_SONG, processing: false}));
   }
 };
 
 const getCurrentSongScrobblesAction = () => async (dispatch: AppDispatch) => {
-  dispatch(actions.setActionProcessing(SET_CURRENT_SONG_SCROBBLES, true));
+  dispatch(actions.setActionProcessing({actionName: SET_CURRENT_SONG_SCROBBLES, processing: true}));
 
   try {
     const currentSongScrobblesResponse = await getCurrentSongScrobbles();
@@ -120,7 +126,7 @@ const getCurrentSongScrobblesAction = () => async (dispatch: AppDispatch) => {
 
     dispatch(actions.setCurrentSongScrobbles(data));
   } finally {
-    dispatch(actions.setActionProcessing(SET_CURRENT_SONG_SCROBBLES, false));
+    dispatch(actions.setActionProcessing({actionName: SET_CURRENT_SONG_SCROBBLES, processing: false}));
   }
 };
 
@@ -130,24 +136,24 @@ const setScrobblingAction = () => async (dispatch: AppDispatch) => {
 };
 
 const getUserPlaycountAction = () => async (dispatch: AppDispatch) => {
-  dispatch(actions.setActionProcessing(SET_USER_PLAYCOUNT, true));
+  dispatch(actions.setActionProcessing({actionName: SET_USER_PLAYCOUNT, processing: true}));
 
   try {
     const userPlaycount: string = await getUserPlaycount();
     dispatch(actions.setUserPlaycount(userPlaycount));
   } finally {
-    dispatch(actions.setActionProcessing(SET_USER_PLAYCOUNT, false));
+    actions.setActionProcessing({actionName: SET_USER_PLAYCOUNT, processing: false})
   }
 };
 
 const getUserRecentTracksAction = () => async (dispatch: AppDispatch) => {
-  dispatch(actions.setActionProcessing(SET_USER_RECENT_TRACKS, true));
+  dispatch(actions.setActionProcessing({actionName: USER_RECENT_TRACKS, processing: true}));
 
   try {
     const recentTracks: [] = await getRecentTracks();
     dispatch(actions.setUserRecentTracks(recentTracks));
   } finally {
-    dispatch(actions.setActionProcessing(SET_USER_RECENT_TRACKS, false));
+    dispatch(actions.setActionProcessing({actionName: USER_RECENT_TRACKS, processing: false}));
   }
 };
 
@@ -157,14 +163,14 @@ const scrobbleSongAction = () => async (dispatch: AppDispatch) => {
 };
 
 const syncWithBackendAction = () => async (dispatch: AppDispatch) => {
-  dispatch(actions.setActionProcessing(SET_SYNC_DETAILS, true));
+  dispatch(actions.setActionProcessing({actionName: SET_SYNC_DETAILS, processing: true}));
 
   try {
     const syncDetails: any = await syncState();
     const details = mapKeysToCamelCase(syncDetails);
     dispatch(actions.setSyncDetails(details));
   } finally {
-    dispatch(actions.setActionProcessing(SET_SYNC_DETAILS, false));
+    dispatch(actions.setActionProcessing({actionName: SET_SYNC_DETAILS, processing: false}));
   }
 };
 

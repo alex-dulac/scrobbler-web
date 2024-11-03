@@ -1,14 +1,12 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {User} from "../models/user.model.ts";
 import {actions, AppDispatch, getUserPlaycountAction, RootState, setScrobblingAction} from "../store.ts";
 import {connect} from "react-redux";
 import {contentTypes} from "../constants.ts";
-import {Song} from "../models/song.model.ts";
 import NowPlayingWidget from "./NowPlaying.tsx";
 import ActionNotification from "./ActionNotification.tsx";
 
 interface SidebarProps {
-  currentSong: Song | null;
   getUserPlaycount: () => Promise<void>;
   scrobbling: boolean;
   setContentFocus: (tab: string) => void;
@@ -23,6 +21,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   setScrobbling,
   user,
 }) => {
+  const [showActionNotifications, setShowActionNotifications] = useState<boolean>(true);
+
   useEffect(() => {
     getUserPlaycount();
 
@@ -41,6 +41,10 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const handleContentFocus = (content: string) => {
     setContentFocus(content);
+  }
+
+  const handleNotificationsClick = () => {
+    setShowActionNotifications(!showActionNotifications);
   }
 
   return (
@@ -73,7 +77,9 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       <NowPlayingWidget />
 
-      <ActionNotification />
+      <div className={"notification-div"} onClick={() => handleNotificationsClick()}>
+        {showActionNotifications && <ActionNotification />}
+      </div>
 
     </aside>
   );
