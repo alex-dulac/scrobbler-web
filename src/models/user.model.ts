@@ -6,7 +6,7 @@ export class User {
         public name?: string,
         public url?: string,
         public imageUrl?: string,
-        public playcount?: number,
+        public playcount?: string,
         public recentTracks?: [LastFmTrack, LastFmAlbum][],
         public albumCount?: number,
         public artistCount?: number,

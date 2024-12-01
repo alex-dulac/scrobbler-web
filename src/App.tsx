@@ -1,98 +1,58 @@
-import React, {useEffect, useState} from 'react';
-import {connect} from 'react-redux';
-import {AppDispatch, getCurrentSongAction, RootState, scrobbleSongAction, syncWithBackendAction} from './store';
-import Sidebar from "./components/Sidebar.tsx";
-import Content from "./components/Content.tsx";
-import {Song} from "./models/song.model.ts";
-import {LastFmAlbum} from "./models/lastfm-album.model.ts";
+import React, { useMemo } from 'react';
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
+import SideMenu from "./dashboard/components/SideMenu";
+import AppNavbar from "./dashboard/components/AppNavbar";
+import { alpha } from "@mui/material/styles";
+import Stack from "@mui/material/Stack";
+import Header from "./dashboard/components/Header";
+import MainGrid from "./dashboard/components/MainGrid";
+import AppTheme from "./shared-theme/AppTheme";
+import {
+  chartsCustomizations,
+  dataGridCustomizations,
+  datePickersCustomizations,
+  treeViewCustomizations
+} from "./dashboard/theme/customizations";
+import { useCurrentSong, useScrobble, useScrobbleInterval, useSyncWithBackend } from "./library/hooks.ts";
 
-const POLL: boolean = import.meta.env.VITE_POLL;
+const App: React.FC = () => {
+  useSyncWithBackend();
+  useCurrentSong();
+  const { scrobble } = useScrobble();
+  useScrobbleInterval(scrobble);
 
-interface AppProps {
-  currentSong: Song | null;
-  getCurrentSong: () => Promise<void>;
-  lastfmAlbum: LastFmAlbum | null;
-  scrobbling: boolean;
-  scrobbleCurrentSong: () => Promise<void>;
-  syncWithBackend: () => Promise<void>;
-}
-
-const App: React.FC<AppProps> = ({
-  currentSong,
-  getCurrentSong,
-  lastfmAlbum,
-  scrobbling,
-  scrobbleCurrentSong,
-  syncWithBackend,
-}) => {
-  const [backgroundStyle, setBackgroundStyle] = useState<React.CSSProperties>({});
-
-  useEffect(() => {
-    syncWithBackend();
-  }, []);
-
-  if (POLL) {
-    useEffect(() => {
-      const getCurrentSongInterval = setInterval(async () => {
-        await getCurrentSong();
-      }, 5000); // 5 seconds
-
-      return () => {
-        clearInterval(getCurrentSongInterval);
-      };
-    }, [getCurrentSong]);
-  }
-
-  useEffect(() => {
-    const scrobbleInterval = setInterval(async () => {
-      if (scrobbling && currentSong?.scrobbled == false) {
-        await scrobbleCurrentSong();
-      }
-    }, 30000); // 30 seconds
-
-    return () => {
-      clearInterval(scrobbleInterval);
-    };
-  }, [scrobbleCurrentSong, scrobbling, currentSong?.scrobbled]);
-
-  // TODO I don't really like this. Do something else.
-  // useEffect(() => {
-  //   const backgroundImage: string = lastfmAlbum ? lastfmAlbum.imageUrl : '';
-  //
-  //   const backgroundStyle: React.CSSProperties = {
-  //     backgroundImage: `
-  //     linear-gradient(to top, rgba(255, 255, 255, 1) 0%,
-  //     rgba(255, 255, 255, 0) 75%),
-  //     url(${backgroundImage})
-  //     `,
-  //     backgroundPosition: 'top center',
-  //   };
-  //
-  //   setBackgroundStyle(backgroundStyle);
-  // }, [lastfmAlbum]);
+  const xThemeComponents = useMemo(() => ({
+    ...chartsCustomizations,
+    ...dataGridCustomizations,
+    ...datePickersCustomizations,
+    ...treeViewCustomizations,
+  }), []);
 
   return (
-    <div className={"App"}>
-      <div className={"background-image"} style={backgroundStyle}>
-        <div className={"main-container"}>
-          <Sidebar />
-          <Content />
-        </div>
-      </div>
-    </div>
+    <AppTheme themeComponents={xThemeComponents}>
+      <CssBaseline enableColorScheme />
+      <Box sx={{ display: 'flex' }}>
+        <SideMenu />
+        <AppNavbar />
+        <Box
+          component="main"
+          sx={(theme) => ({
+            flexGrow: 1,
+            backgroundColor: theme.vars
+              ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
+              : alpha(theme.palette.background.default, 1),
+            overflow: 'auto',
+          })}
+        >
+          <Stack spacing={2} sx={{ alignItems: 'center', mx: 3, pb: 5, mt: { xs: 8, md: 0 } }}>
+            <Header />
+            <MainGrid />
+          </Stack>
+        </Box>
+      </Box>
+    </AppTheme>
   );
 };
 
-const mapStateToProps = (state: RootState) => ({
-  currentSong: state.currentSong,
-  lastfmAlbum: state.lastfmAlbum,
-  scrobbling: state.scrobbling,
-});
-
-const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  getCurrentSong: () => dispatch(getCurrentSongAction()),
-  syncWithBackend: () => dispatch(syncWithBackendAction()),
-  scrobbleCurrentSong: () => dispatch(scrobbleSongAction()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

@@ -2,7 +2,7 @@ import React from 'react';
 import RecentTracks from "./RecentTracks.tsx";
 import {RootState} from "../../store.ts";
 import {connect} from "react-redux";
-import {dashboardTypes} from "../../constants.ts";
+import {dashboardTypes} from "../../library/constants.ts";
 import LastFmAccount from "../accounts/LastFmAccount.tsx";
 import CurrentSong from "./CurrentSong.tsx";
 

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {User} from "../models/user.model.ts";
-import {actions, AppDispatch, getUserPlaycountAction, RootState, setScrobblingAction} from "../store.ts";
+import {AppDispatch, getUserPlaycountAction, RootState} from "../store.ts";
 import {connect} from "react-redux";
-import {contentTypes} from "../constants.ts";
+import {contentTypes} from "../library/constants.ts";
 import NowPlayingWidget from "./NowPlaying.tsx";
 import ActionNotification from "./ActionNotification.tsx";
 
@@ -93,7 +93,6 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
   getUserPlaycount: () => dispatch(getUserPlaycountAction()),
   setContentFocus: (tab: string) => dispatch(actions.setContentFocus(tab)),
-  setScrobbling: () => dispatch(setScrobblingAction()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

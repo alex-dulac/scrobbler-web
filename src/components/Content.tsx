@@ -3,7 +3,7 @@ import DashboardHeader from "./lastfm/DashboardHeader.tsx";
 import Dashboard from "./lastfm/Dashboard.tsx";
 import {RootState} from "../store.ts";
 import {connect} from "react-redux";
-import {contentTypes} from "../constants.ts";
+import {contentTypes} from "../library/constants.ts";
 import AppleAccount from "./accounts/AppleAccount.tsx";
 import SpotifyAccount from "./accounts/SpotifyAccount.tsx";
 

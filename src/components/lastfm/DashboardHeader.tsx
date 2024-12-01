@@ -1,7 +1,7 @@
  import React from 'react';
  import {actions, AppDispatch, RootState} from "../../store.ts";
  import {connect} from "react-redux";
- import {dashboardTypes} from "../../constants.ts";
+ import {dashboardTypes} from "../../library/constants.ts";
 
  interface DashboardHeaderProps {
    activeLastFmTab: string;
