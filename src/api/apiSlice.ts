@@ -37,7 +37,7 @@ export const apiSlice = createApi({
 		getRecentTracks: builder.query<any, void>({
 			query: () => routes.USER_RECENT_TRACKS,
       transformResponse: (response: any) => {
-        return mapKeysToCamelCase(response.data.recent_tracks);
+        return mapKeysToCamelCase(response.recent_tracks);
       },
 		}),
 		getUserPlaycount: builder.query<any, void>({
@@ -51,6 +51,12 @@ export const apiSlice = createApi({
 				url: routes.SCROBBLE,
 				method: 'POST',
 				// body: { },
+			}),
+		}),
+		scrobbleToggle: builder.mutation<boolean, void>({
+			query: () => ({
+				url: routes.SCROBBLE_TOGGLE,
+				method: 'POST'
 			}),
 		}),
 		syncWithBackend: builder.query<any, void>({
@@ -68,5 +74,6 @@ export const {
   useGetRecentTracksQuery,
   useGetUserPlaycountQuery,
 	useScrobbleMutation,
+	useScrobbleToggleMutation,
 	useSyncWithBackendQuery
 } = apiSlice;

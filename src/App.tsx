@@ -15,6 +15,7 @@ import {
   treeViewCustomizations
 } from "./dashboard/theme/customizations";
 import { useCurrentSong, useScrobble, useScrobbleInterval, useSyncWithBackend } from "./library/hooks.ts";
+import { Theme } from '@mui/material/styles';
 
 const App: React.FC = () => {
   useSyncWithBackend();
@@ -37,7 +38,7 @@ const App: React.FC = () => {
         <AppNavbar />
         <Box
           component="main"
-          sx={(theme) => ({
+          sx={(theme: Theme & { vars?: any }) => ({
             flexGrow: 1,
             backgroundColor: theme.vars
               ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`

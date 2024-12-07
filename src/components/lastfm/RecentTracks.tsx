@@ -3,7 +3,6 @@ import {LastFmTrack} from "../../models/lastfm-track.model.ts";
 import {User} from "../../models/user.model.ts";
 import {
   AppDispatch,
-  getUserRecentTracksAction,
   RootState,
 } from "../../store.ts";
 import {connect} from "react-redux";

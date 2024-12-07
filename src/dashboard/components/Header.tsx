@@ -1,26 +1,26 @@
 import Stack from '@mui/material/Stack';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import CustomDatePicker from './CustomDatePicker';
 import NavbarBreadcrumbs from './NavbarBreadcrumbs';
 import MenuButton from './MenuButton';
 import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
 
-import Search from './Search';
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState, setPolling, setScrobbling} from "../../store.ts";
-import {MusicNote, MusicOff, Person, PersonOff} from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState, setPolling, setScrobbling } from "../../store.ts";
+import { MusicNote, MusicOff, Person, PersonOff } from "@mui/icons-material";
+import { useScrobbleToggle } from "../../library/hooks.ts";
 
 export default function Header() {
   const dispatch = useDispatch<AppDispatch>();
+  const { scrobbleToggle } = useScrobbleToggle();
 
   const polling = useSelector((state: RootState) => state.app.polling);
   const scrobbling = useSelector((state: RootState) => state.app.scrobbling);
 
-  const handleScrobblingToggle = () => {
-    dispatch(setScrobbling(!scrobbling));
+  const handleScrobblingToggle = async () => {
+    const result = await scrobbleToggle();
+    dispatch(setScrobbling(result.data ?? false));
   };
 
-  const handlePollingToggle = () => {
+  const handlePollingToggle = async () => {
     dispatch(setPolling(!polling));
   };
 
@@ -39,8 +39,11 @@ export default function Header() {
     >
       <NavbarBreadcrumbs />
       <Stack direction="row" sx={{ gap: 1 }}>
+
+        {/*
         <Search />
         <CustomDatePicker />
+        */}
 
         <MenuButton onClick={handlePollingToggle} aria-label="Open notifications">
           {polling ? <MusicNote /> : <MusicOff />}
@@ -50,9 +53,11 @@ export default function Header() {
           {scrobbling ? <Person /> : <PersonOff />}
         </MenuButton>
 
+        {/*
         <MenuButton aria-label="Open notifications">
           <NotificationsRoundedIcon />
         </MenuButton>
+        */}
 
         <ColorModeIconDropdown />
       </Stack>

@@ -1,23 +1,30 @@
-import { useCallback, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, getUserRecentTracksAction, RootState } from "../../store.ts";
-import { Song } from "../../models/song.model.ts";
-import { User } from "../../models/user.model.ts";
+import { useRecentTracks } from "../../library/hooks.ts";
+import {useMemo} from "react";
+import {LastFmTrack} from "../../models/lastfm-track.model.ts";
+import {LastFmAlbum} from "../../models/lastfm-album.model.ts";
 
 export default function RecentTracksDataTable() {
-	const dispatch = useDispatch<AppDispatch>();
+	const { data, error, isLoading } = useRecentTracks();
 
-	const currentSong: Song | null = useSelector((state: RootState) => state.currentSong);
-	const user: User | null = useSelector((state: RootState) => state.user);
+	const rows = useMemo(() => {
+		return data?.map(([track, album]: [LastFmTrack, LastFmAlbum], i: number) => ({
+			id: i,
+			title: track.name,
+			artist: track.artist,
+			album: album.title,
+			scrobbledAt: track.scrobbledAt
+		})) || [];
+	}, [data]);
 
-	const getRecentTracks = useCallback(() => dispatch(getUserRecentTracksAction()), [dispatch]);
+	const columns = [
+		{ field: 'title', headerName: 'Title', flex: 1 },
+		{ field: 'artist', headerName: 'Artist', flex: 1 },
+		{ field: 'album', headerName: 'Album', flex: 1 },
+		{ field: 'scrobbledAt', headerName: 'Scrobbled At', flex: 1 },
+	];
 
-	useEffect(() => {
-		if (!user?.recentTracks || currentSong?.scrobbled) {
-			getRecentTracks();
-		}
-  }, [getRecentTracks, user?.recentTracks, currentSong?.scrobbled]);
+	console.log(rows);
 
 	return (
 		<DataGrid

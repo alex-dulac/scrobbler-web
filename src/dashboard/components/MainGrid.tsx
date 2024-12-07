@@ -7,6 +7,7 @@ import CustomizedDataGrid from './CustomizedDataGrid';
 import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
 import StatCard, { StatCardProps } from './StatCard';
+import RecentTracksDataTable from "../../components/new/RecentTracksDataTable.tsx";
 
 const data: StatCardProps[] = [
   {
@@ -76,11 +77,21 @@ export default function MainGrid() {
           <PageViewsBarChart />
         </Grid>
       </Grid>
+
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         Recent Tracks
       </Typography>
       <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 9 }}>
+        <Grid size={{ xs: 12, lg: 12 }}>
+          <RecentTracksDataTable />
+        </Grid>
+      </Grid>
+
+      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+        Current Song Scrobble History
+      </Typography>
+      <Grid container spacing={2} columns={12}>
+        <Grid size={{ xs: 12, lg: 12 }}>
           <CustomizedDataGrid />
         </Grid>
       </Grid>

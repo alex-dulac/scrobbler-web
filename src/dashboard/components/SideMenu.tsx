@@ -25,7 +25,7 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
-  const user: User | null = useSelector((state: RootState) => state.user);
+  const user: User | null = useSelector((state: RootState) => state.app.user);
 
   return (
     <Drawer
