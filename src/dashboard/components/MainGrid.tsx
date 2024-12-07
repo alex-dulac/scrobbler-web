@@ -7,7 +7,7 @@ import CustomizedDataGrid from './CustomizedDataGrid';
 import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
 import StatCard, { StatCardProps } from './StatCard';
-import RecentTracksDataTable from "../../components/new/RecentTracksDataTable.tsx";
+import RecentTracksDataTable from "../../components/RecentTracksDataTable.tsx";
 
 const data: StatCardProps[] = [
   {

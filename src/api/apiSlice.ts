@@ -15,9 +15,7 @@ export const apiSlice = createApi({
 	endpoints: (builder) => ({
 		getCurrentSong: builder.query<Song, void>({
 			query: () => routes.POLL,
-      transformResponse: (response: any) => {
-        return mapKeysToCamelCase(response.data.data);
-      },
+      transformResponse: (response: any) => mapKeysToCamelCase(response.data.data),
 		}),
 		getCurrentSongScrobbles: builder.query<any, void>({
 			query: () => routes.USER_CURRENT_TRACK_SCROBBLES,
@@ -36,21 +34,16 @@ export const apiSlice = createApi({
 		}),
 		getRecentTracks: builder.query<any, void>({
 			query: () => routes.USER_RECENT_TRACKS,
-      transformResponse: (response: any) => {
-        return mapKeysToCamelCase(response.recent_tracks);
-      },
+      transformResponse: (response: any) => mapKeysToCamelCase(response.recent_tracks),
 		}),
 		getUserPlaycount: builder.query<any, void>({
 			query: () => routes.USER_PLAYCOUNT,
-      transformResponse: (response: any) => {
-        return mapKeysToCamelCase(response.data.playcount);
-      },
+      transformResponse: (response: any) => mapKeysToCamelCase(response.data.playcount),
 		}),
 		scrobble: builder.mutation<boolean, void>({
 			query: () => ({
 				url: routes.SCROBBLE,
 				method: 'POST',
-				// body: { },
 			}),
 		}),
 		scrobbleToggle: builder.mutation<boolean, void>({
@@ -59,11 +52,9 @@ export const apiSlice = createApi({
 				method: 'POST'
 			}),
 		}),
-		syncWithBackend: builder.query<any, void>({
+		syncWithBackend: builder.query<syncDetails, void>({
 			query: () => routes.STATE,
-			transformResponse: (response: any): syncDetails => {
-				return mapKeysToCamelCase(response);
-			},
+			transformResponse: (response: any): syncDetails => mapKeysToCamelCase(response),
 		}),
 	}),
 });

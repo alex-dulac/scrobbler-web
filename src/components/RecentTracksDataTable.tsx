@@ -1,11 +1,11 @@
 import { DataGrid } from '@mui/x-data-grid';
-import { useRecentTracks } from "../../library/hooks.ts";
-import {useMemo} from "react";
-import {LastFmTrack} from "../../models/lastfm-track.model.ts";
-import {LastFmAlbum} from "../../models/lastfm-album.model.ts";
+import { useRecentTracks } from "../library/hooks.ts";
+import { useMemo } from "react";
+import { LastFmTrack } from "../models/lastfm-track.model.ts";
+import { LastFmAlbum } from "../models/lastfm-album.model.ts";
 
 export default function RecentTracksDataTable() {
-	const { data, error, isLoading } = useRecentTracks();
+	const { data, isLoading } = useRecentTracks();
 
 	const rows = useMemo(() => {
 		return data?.map(([track, album]: [LastFmTrack, LastFmAlbum], i: number) => ({
@@ -24,11 +24,10 @@ export default function RecentTracksDataTable() {
 		{ field: 'scrobbledAt', headerName: 'Scrobbled At', flex: 1 },
 	];
 
-	console.log(rows);
-
 	return (
 		<DataGrid
 			autoHeight
+			loading={isLoading}
 			rows={rows}
 			columns={columns}
 			getRowClassName={(params) =>
