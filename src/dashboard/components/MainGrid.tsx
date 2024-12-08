@@ -2,12 +2,14 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Copyright from '../internals/components/Copyright';
-import CustomizedDataGrid from './CustomizedDataGrid';
-import PageViewsBarChart from './PageViewsBarChart';
+import Copyright from './Copyright.tsx';
+import PageViewsBarChart from './dataTables/PageViewsBarChart.tsx';
 import SessionsChart from './SessionsChart';
 import StatCard, { StatCardProps } from './StatCard';
-import RecentTracksDataTable from "../../components/RecentTracksDataTable.tsx";
+import RecentTracksDataTable from "./dataTables/RecentTracksDataTable.tsx";
+import CurrentSongScrobblesDataTable from "./dataTables/CurrentSongScrobblesDataTable.tsx";
+import CustomizedTreeView from "./dataTables/CustomizedTreeView.tsx";
+import Stack from "@mui/material/Stack";
 
 const data: StatCardProps[] = [
   {
@@ -55,9 +57,8 @@ const data: StatCardProps[] = [
 export default function MainGrid() {
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-      {/* cards */}
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Overview
+        Web Scrobbler
       </Typography>
       <Grid
         container
@@ -91,10 +92,16 @@ export default function MainGrid() {
         Current Song Scrobble History
       </Typography>
       <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 12 }}>
-          <CustomizedDataGrid />
+        <Grid size={{ xs: 12, lg: 9 }}>
+          <CurrentSongScrobblesDataTable />
+        </Grid>
+        <Grid size={{ xs: 12, lg: 3 }}>
+          <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
+            <CustomizedTreeView />
+          </Stack>
         </Grid>
       </Grid>
+
       <Copyright sx={{ my: 4 }} />
     </Box>
   );

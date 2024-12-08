@@ -1,18 +1,17 @@
 import { DataGrid } from '@mui/x-data-grid';
-import { useRecentTracks } from "../library/hooks.ts";
+import { useCurrentSongScrobbles } from "../../../library/hooks.ts";
 import { useMemo } from "react";
-import { LastFmTrack } from "../models/lastfm-track.model.ts";
-import { LastFmAlbum } from "../models/lastfm-album.model.ts";
+import { LastFmTrack } from "../../../models/lastfm-track.model.ts";
 
-export default function RecentTracksDataTable() {
-	const { data, isLoading } = useRecentTracks();
+export default function CurrentSongScrobblesDataTable() {
+	const { data, isLoading } = useCurrentSongScrobbles();
 
 	const rows = useMemo(() => {
-		return data?.map(([track, album]: [LastFmTrack, LastFmAlbum], i: number) => ({
+		return data?.map((track: LastFmTrack, i: number) => ({
 			id: i,
 			title: track.name,
 			artist: track.artist,
-			album: album.title,
+			album: track.album,
 			scrobbledAt: track.scrobbledAt
 		})) || [];
 	}, [data]);

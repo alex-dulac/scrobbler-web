@@ -112,6 +112,7 @@ export type AppDispatch = typeof store.dispatch;
 
 export const {
   setCurrentSong,
+  setCurrentSongScrobbles,
   setLoading,
   setPolling,
   setScrobbling,
