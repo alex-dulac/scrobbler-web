@@ -2,59 +2,37 @@ import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Song } from "./models/song.model.ts";
 import { User } from "./models/user.model.ts";
 import { LastFmAlbum } from "./models/lastfm-album.model.ts";
-import { contentTypes, dashboardTypes } from "./library/constants.ts";
 import { apiSlice } from "./api/apiSlice.ts";
 import { syncDetails } from "./library/interfaces.ts";
 
 interface State {
   activeIntegration: number;
-  activeLastFmTab: string;
-  actionProcessing: { [key: string]: boolean };
-  contentFocus: string;
   currentSong: Song | null;
   currentSongScrobbles: {timestamp: string, count: number}[] | null;
   lastfmAlbum: LastFmAlbum | null;
   loading: boolean;
   polling: boolean;
-  scrobbling: boolean;
+  scrobbling: boolean | undefined;
   scrobbleSongResult: boolean | null;
   user: User | null;
 }
 
 const initialState: State = {
   activeIntegration: 0,
-  activeLastFmTab: dashboardTypes.RECENT_TRACKS,
-  actionProcessing: {},
-  contentFocus: contentTypes.LAST_FM,
   currentSong: null,
   currentSongScrobbles: null,
   lastfmAlbum: null,
   loading: false,
-  polling: false,
-  scrobbling: false,
+  polling: true,
+  scrobbling: undefined,
   scrobbleSongResult: null,
   user: null,
 };
-
-export const SET_CONTENT_FOCUS: string = 'SET_CONTENT_FOCUS';
-export const SET_POLLING: string = 'SET_POLLING';
-export const SCROBBLE_SONG: string = 'SCROBBLE_SONG';
-export const SET_CURRENT_SONG: string = 'SET_CURRENT_SONG';
-export const SET_USER_PLAYCOUNT: string = 'SET_USER_PLAYCOUNT';
-export const SET_USER_RECENT_TRACKS: string = 'SET_USER_RECENT_TRACKS';
-export const SET_SCROBBLE_SONG_RESULT: string = 'SET_SCROBBLE_SONG_RESULT';
-export const SET_SYNC_DETAILS: string = 'SET_SYNC_DETAILS';
 
 const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    setActiveLastFmTab: (state, action: PayloadAction<string>) => {
-      state.activeLastFmTab = action.payload;
-    },
-    setContentFocus: (state, action: PayloadAction<string>) => {
-      state.contentFocus = action.payload;
-    },
     setScrobbling: (state, action: PayloadAction<boolean>) => {
       state.scrobbling = action.payload;
     },
@@ -116,5 +94,8 @@ export const {
   setLoading,
   setPolling,
   setScrobbling,
-  setSyncDetails
+  setSyncDetails,
+  setScrobbleSongResult,
+  setUserPlaycount,
+  setUserRecentTracks,
 } = appSlice.actions;

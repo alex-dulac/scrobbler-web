@@ -5,7 +5,9 @@ import {
 	setSyncDetails,
 	setLoading,
 	setCurrentSong,
-	setScrobbling, setCurrentSongScrobbles
+	setScrobbling,
+	setCurrentSongScrobbles,
+	setUserRecentTracks
 } from '../store.ts';
 import * as api from "../api/apiSlice.ts";
 import { Song } from "../models/song.model.ts";
@@ -61,7 +63,7 @@ export const useCurrentSong = () => {
 	});
 
 	useLoadingEffect(isLoading, error, data, useCallback(() => {
-		if (data) dispatch(setCurrentSong(data));
+		if (data) dispatch(setCurrentSong(data.currentSong));
 	}, [dispatch, data]));
 
 	return { data, error, isLoading };
@@ -69,13 +71,22 @@ export const useCurrentSong = () => {
 
 export const useCurrentSongScrobbles = () => {
 	const dispatch = useDispatch<AppDispatch>();
-  const { data, error, isLoading } = api.useGetCurrentSongScrobblesQuery();
+	const currentSong: Song | null = useSelector((state: RootState) => state.app.currentSong);
+	const { data, error, isFetching, refetch } = api.useGetCurrentSongScrobblesQuery(undefined, {
+		skip: !currentSong,
+	});
 
-  useLoadingEffect(isLoading, error, data, useCallback(() => {
-    if (data) dispatch(setCurrentSongScrobbles(data));
-  }, [dispatch, data]));
+	useEffect(() => {
+		if (currentSong) {
+			refetch();
+		}
+	}, [currentSong, refetch]);
 
-  return { data, error, isLoading };
+	useLoadingEffect(isFetching, error, data, useCallback(() => {
+		if (data) dispatch(setCurrentSongScrobbles(data));
+	}, [dispatch, data]));
+
+	return { data, error, isLoading: isFetching };
 }
 
 export const useRecentTracks = () => {
@@ -83,7 +94,7 @@ export const useRecentTracks = () => {
 	const { data, error, isLoading } = api.useGetRecentTracksQuery();
 
 	useLoadingEffect(isLoading, error, data, useCallback(() => {
-		if (data) dispatch(setSyncDetails(data));
+		if (data) dispatch(setUserRecentTracks(data));
 	}, [dispatch, data]));
 
 	return { data, error, isLoading };
@@ -100,9 +111,8 @@ export const useScrobble = () => {
 };
 
 export const useScrobbleToggle = () => {
-	const [scrobbleToggle, { data, isLoading, isError, error }] = api.useScrobbleToggleMutation();
-
 	const dispatch = useDispatch<AppDispatch>();
+	const [scrobbleToggle, { data, isLoading, isError, error }] = api.useScrobbleToggleMutation();
 
 	useLoadingEffect(isLoading, isError, data, useCallback(() => {
 		if (data) dispatch(setScrobbling(data));
@@ -113,7 +123,7 @@ export const useScrobbleToggle = () => {
 
 export const useScrobbleInterval = (scrobble: () => void) => {
 	const polling = useSelector((state: RootState) => state.app.polling);
-	const scrobbling = useSelector((state: RootState) => state.app.scrobbling);
+	const scrobbling: boolean | undefined = useSelector((state: RootState) => state.app.scrobbling);
 	const currentSong: Song | null = useSelector((state: RootState) => state.app.currentSong);
 
 	useEffect(() => {

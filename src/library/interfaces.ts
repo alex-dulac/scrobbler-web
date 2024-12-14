@@ -9,3 +9,9 @@ export interface syncDetails {
 	lastFmAlbum: LastFmAlbum; // no tracks
 	user: User; // no recent tracks
 }
+
+export interface currentSong {
+	artistImage: string;
+	currentSong: Song;
+	lastFmAlbum: LastFmAlbum; // no tracks
+}
