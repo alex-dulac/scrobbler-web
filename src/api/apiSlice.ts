@@ -14,23 +14,23 @@ export const apiSlice = createApi({
 	endpoints: (builder) => ({
 		getCurrentSong: builder.query<currentSong, void>({
 			query: () => routes.POLL,
-		  transformResponse: (response: any) => mapKeysToCamelCase(response.data),
+			transformResponse: (response: any) => mapKeysToCamelCase(response.data),
 		}),
 		getCurrentSongScrobbles: builder.query<any, void>({
 			query: () => routes.USER_CURRENT_TRACK_SCROBBLES,
-		  transformResponse: (response: any) => mapKeysToCamelCase(response.scrobbles),
+			transformResponse: (response: any) => mapKeysToCamelCase(response.scrobbles),
 		}),
 		getScrobbleStatus: builder.query<boolean, void>({
 			query: () => routes.SCROBBLE_STATUS,
-      transformResponse: (response: any) => mapKeysToCamelCase(response.is_scrobbling),
+			transformResponse: (response: any) => mapKeysToCamelCase(response.is_scrobbling),
 		}),
 		getRecentTracks: builder.query<any, void>({
 			query: () => routes.USER_RECENT_TRACKS,
-		  transformResponse: (response: any) => mapKeysToCamelCase(response.recent_tracks),
+			transformResponse: (response: any) => mapKeysToCamelCase(response.recent_tracks),
 		}),
 		getUserPlaycount: builder.query<any, void>({
 			query: () => routes.USER_PLAYCOUNT,
-		  transformResponse: (response: any) => mapKeysToCamelCase(response.data.playcount),
+			transformResponse: (response: any) => mapKeysToCamelCase(response.data.playcount),
 		}),
 		scrobble: builder.mutation<boolean, void>({
 			query: () => ({
@@ -59,5 +59,7 @@ export const {
 	useScrobbleMutation,
 	useGetScrobbleStatusQuery,
 	useScrobbleToggleMutation,
-	useSyncWithBackendQuery
+	useSyncWithBackendQuery,
+	endpoints,
+	util
 } = apiSlice;

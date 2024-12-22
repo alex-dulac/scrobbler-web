@@ -14,10 +14,17 @@ import {
   datePickersCustomizations,
   treeViewCustomizations
 } from "./dashboard/theme/customizations";
-import { useCurrentSong, useScrobble, useScrobbleInterval, useSyncWithBackend } from "./library/hooks.ts";
+import {
+  useCurrentSong,
+  useGlobalLoading,
+  useScrobble,
+  useScrobbleInterval,
+  useSyncWithBackend
+} from "./library/hooks.ts";
 import { Theme } from '@mui/material/styles';
 
 const App: React.FC = () => {
+  useGlobalLoading();
   useSyncWithBackend();
   useCurrentSong();
   const { scrobble } = useScrobble();

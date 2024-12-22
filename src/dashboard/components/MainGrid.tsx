@@ -10,6 +10,9 @@ import RecentTracksDataTable from "./dataTables/RecentTracksDataTable.tsx";
 import CurrentSongScrobblesDataTable from "./dataTables/CurrentSongScrobblesDataTable.tsx";
 import CustomizedTreeView from "./dataTables/CustomizedTreeView.tsx";
 import Stack from "@mui/material/Stack";
+import { LinearProgress } from "@mui/material";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store.ts";
 
 const data: StatCardProps[] = [
   {
@@ -55,11 +58,18 @@ const data: StatCardProps[] = [
 ];
 
 export default function MainGrid() {
+  const loading = useSelector((state: RootState) => state.app.loading);
+
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
+      <Box sx={{ height: 4, mb: 2 }}>
+        {loading && <LinearProgress />}
+      </Box>
+
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         Web Scrobbler
       </Typography>
+
       <Grid
         container
         spacing={2}
