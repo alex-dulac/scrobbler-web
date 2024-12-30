@@ -7,7 +7,7 @@ import {
 	setCurrentSong,
 	setScrobbling,
 	setCurrentSongScrobbles,
-	setUserRecentTracks
+	setRecentTracks
 } from '../store.ts';
 import * as api from "../api/apiSlice.ts";
 import { Song } from "../models/song.model.ts";
@@ -65,10 +65,10 @@ export const useCurrentSongScrobbles = () => {
 	});
 
 	useEffect(() => {
-		if (currentSong) {
+		if (currentSong?.id) {
 			refetch();
 		}
-	}, [currentSong, refetch]);
+	}, [currentSong?.id, refetch]);
 
 	useEffect(() => {
 		if (data) dispatch(setCurrentSongScrobbles(data));
@@ -82,7 +82,7 @@ export const useRecentTracks = () => {
 	const { data, error, isLoading } = api.useGetRecentTracksQuery();
 
 	useEffect(() => {
-		if (data) dispatch(setUserRecentTracks(data));
+		if (data) dispatch(setRecentTracks(data));
 	}, [dispatch, data]);
 
 	return { data, error, isLoading };

@@ -4,26 +4,31 @@ import { User } from "./models/user.model.ts";
 import { LastFmAlbum } from "./models/lastfm-album.model.ts";
 import { apiSlice } from "./api/apiSlice.ts";
 import { syncDetails } from "./library/interfaces.ts";
+import { LastFmTrack } from "./models/lastfm-track.model.ts";
 
 interface State {
+  activeGrid: string;
   activeIntegration: number;
   currentSong: Song | null;
   currentSongScrobbles: {timestamp: string, count: number}[] | null;
   lastfmAlbum: LastFmAlbum | null;
   loading: boolean;
   polling: boolean;
+  recentTracks: [LastFmTrack, LastFmAlbum][] | null
   scrobbling: boolean | undefined;
   scrobbleSongResult: boolean | null;
   user: User | null;
 }
 
 const initialState: State = {
+  activeGrid: 'home',
   activeIntegration: 0,
   currentSong: null,
   currentSongScrobbles: null,
   lastfmAlbum: null,
   loading: false,
   polling: true,
+  recentTracks: null,
   scrobbling: undefined,
   scrobbleSongResult: null,
   user: null,
@@ -51,13 +56,11 @@ const appSlice = createSlice({
     setUserPlaycount: (state, action: PayloadAction<string>) => {
       state.user ? state.user.playcount = action.payload : null;
     },
-    setUserRecentTracks: (state, action: PayloadAction<any>) => {
-      const transformedPayload = action.payload.map(([track, album]: [any, any]) => [
-        { ...track, scrobbledAt: track.scrobbled_at },
-        { ...album, imageUrl: album.image_url }
+    setRecentTracks: (state, action: PayloadAction<any>) => {
+      state.recentTracks = action.payload.map(([track, album]: [any, any]) => [
+        {...track, scrobbledAt: track.scrobbled_at},
+        {...album, imageUrl: album.image_url}
       ]);
-
-      state.user? state.user.recentTracks = transformedPayload : null;
     },
     setScrobbleSongResult: (state, action: PayloadAction<boolean | null>) => {
       state.scrobbleSongResult = action.payload;
@@ -67,11 +70,10 @@ const appSlice = createSlice({
       state.currentSong = action.payload.currentSong;
       state.lastfmAlbum = action.payload.lastFmAlbum;
       state.scrobbling = action.payload.isScrobbling;
-      state.user = {
-        ...state.user,
-        ...action.payload.user,
-        recentTracks: state.user?.recentTracks, // Preserve the existing recentTracks
-      };
+      state.user = action.payload.user;
+    },
+    setActiveGrid: (state, action: PayloadAction<string>) => {
+      state.activeGrid = action.payload;
     },
   },
 });
@@ -97,5 +99,6 @@ export const {
   setSyncDetails,
   setScrobbleSongResult,
   setUserPlaycount,
-  setUserRecentTracks,
+  setRecentTracks,
+  setActiveGrid,
 } = appSlice.actions;

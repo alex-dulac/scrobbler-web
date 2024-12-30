@@ -43,6 +43,7 @@ export const apiSlice = createApi({
 				url: routes.SCROBBLE_TOGGLE,
 				method: 'POST'
 			}),
+			transformResponse: (response: any) => mapKeysToCamelCase(response).isScrobbling,
 		}),
 		syncWithBackend: builder.query<syncDetails, void>({
 			query: () => routes.STATE,

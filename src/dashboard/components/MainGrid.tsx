@@ -58,6 +58,7 @@ const data: StatCardProps[] = [
 ];
 
 export default function MainGrid() {
+  const activeGrid = useSelector((state: RootState) => state.app.activeGrid);
   const loading = useSelector((state: RootState) => state.app.loading);
 
   return (
@@ -66,51 +67,59 @@ export default function MainGrid() {
         {loading && <LinearProgress />}
       </Box>
 
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Web Scrobbler
-      </Typography>
+      {activeGrid === 'home' && (
+        <>
+          <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+            Web Scrobbler Dashboard
+          </Typography>
 
-      <Grid
-        container
-        spacing={2}
-        columns={12}
-        sx={{ mb: (theme) => theme.spacing(2) }}
-      >
-        {data.map((card, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
-            <StatCard {...card} />
+          <Grid
+            container
+            spacing={2}
+            columns={12}
+            sx={{ mb: (theme) => theme.spacing(2) }}
+          >
+            {data.map((card, index) => (
+              <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
+                <StatCard {...card} />
+              </Grid>
+            ))}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <SessionsChart />
+            </Grid>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <PageViewsBarChart />
+            </Grid>
           </Grid>
-        ))}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <SessionsChart />
-        </Grid>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <PageViewsBarChart />
-        </Grid>
-      </Grid>
 
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Recent Tracks
-      </Typography>
-      <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 12 }}>
-          <RecentTracksDataTable />
-        </Grid>
-      </Grid>
+          <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+            Recent Tracks
+          </Typography>
+          <Grid container spacing={2} columns={12}>
+            <Grid size={{ xs: 12, lg: 12 }}>
+              <RecentTracksDataTable />
+            </Grid>
+          </Grid>
+        </>
+      )}
 
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Current Song Scrobble History
-      </Typography>
-      <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 9 }}>
-          <CurrentSongScrobblesDataTable />
-        </Grid>
-        <Grid size={{ xs: 12, lg: 3 }}>
-          <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
-            <CustomizedTreeView />
-          </Stack>
-        </Grid>
-      </Grid>
+      {activeGrid === 'currentSong' && (
+        <>
+          <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+            Current Song Scrobble History
+          </Typography>
+          <Grid container spacing={2} columns={12}>
+            <Grid size={{ xs: 12, lg: 9 }}>
+              <CurrentSongScrobblesDataTable />
+            </Grid>
+            <Grid size={{ xs: 12, lg: 3 }}>
+              <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
+                <CustomizedTreeView />
+              </Stack>
+            </Grid>
+          </Grid>
+        </>
+      )}
 
       <Copyright sx={{ my: 4 }} />
     </Box>

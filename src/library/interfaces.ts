@@ -7,7 +7,7 @@ export interface syncDetails {
 	currentSong: Song;
 	isScrobbling: boolean;
 	lastFmAlbum: LastFmAlbum; // no tracks
-	user: User; // no recent tracks
+	user: User;
 }
 
 export interface currentSong {
