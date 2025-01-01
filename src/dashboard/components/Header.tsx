@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, setPolling, setScrobbling } from "../../store.ts";
 import { MusicNote, MusicOff, Person, PersonOff } from "@mui/icons-material";
 import { useScrobbleToggle } from "../../library/hooks.ts";
+import Search from "./Search.tsx";
+import CustomDatePicker from "./CustomDatePicker.tsx";
 
 export default function Header() {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,10 +42,8 @@ export default function Header() {
       <NavbarBreadcrumbs />
       <Stack direction="row" sx={{ gap: 1 }}>
 
-        {/*
         <Search />
         <CustomDatePicker />
-        */}
 
         <MenuButton onClick={handlePollingToggle} aria-label="Open notifications">
           {polling ? <MusicNote /> : <MusicOff />}

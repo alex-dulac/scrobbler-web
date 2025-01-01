@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import { areaElementClasses } from '@mui/x-charts/LineChart';
 import { getDaysInMonth } from "../../library/utils.ts";
+import { CircularProgress } from "@mui/material";
 
 export type StatCardProps = {
   title: string;
@@ -16,6 +17,7 @@ export type StatCardProps = {
   interval: string;
   trend: 'up' | 'down' | 'neutral';
   data: number[];
+  isLoading?: boolean;
 };
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
@@ -35,6 +37,7 @@ export default function StatCard({
   interval,
   trend,
   data,
+  isLoading = false,
 }: StatCardProps) {
   const theme = useTheme();
   const daysInWeek = getDaysInMonth(4, 2024);
@@ -63,6 +66,26 @@ export default function StatCard({
   const color = labelColors[trend];
   const chartColor = trendColors[trend];
   const trendValues = { up: '+25%', down: '-25%', neutral: '+5%' };
+
+  if (isLoading) {
+    return (
+      <Card variant="outlined" sx={{ height: '100%', flexGrow: 1 }}>
+        <CardContent>
+          <Typography component="h2" variant="subtitle2" gutterBottom>
+            {title}
+          </Typography>
+          <Stack
+            direction="column"
+            sx={{ justifyContent: 'space-between', flexGrow: '1', gap: 1 }}
+          >
+            <Box sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <CircularProgress size={100} />
+            </Box>
+          </Stack>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card variant="outlined" sx={{ height: '100%', flexGrow: 1 }}>

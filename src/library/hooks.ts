@@ -88,6 +88,11 @@ export const useRecentTracks = () => {
 	return { data, error, isLoading };
 };
 
+export const use30DayStats = () => {
+	const { data, error, isFetching } = api.useGetUser30DayStatsQuery();
+	return { data, error, isLoading: isFetching };
+};
+
 export const useScrobble = () => {
 	const [scrobble, { data, isLoading, isError, error }] = api.useScrobbleMutation();
 

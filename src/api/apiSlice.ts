@@ -28,6 +28,10 @@ export const apiSlice = createApi({
 			query: () => routes.USER_RECENT_TRACKS,
 			transformResponse: (response: any) => mapKeysToCamelCase(response.recent_tracks),
 		}),
+		getUser30DayStats: builder.query<any, void>({
+			query: () => routes.USER_30_DAY_STATS,
+			transformResponse: (response: any) => mapKeysToCamelCase(response.data),
+		}),
 		getUserPlaycount: builder.query<any, void>({
 			query: () => routes.USER_PLAYCOUNT,
 			transformResponse: (response: any) => mapKeysToCamelCase(response.data.playcount),
@@ -56,7 +60,7 @@ export const {
 	useGetCurrentSongQuery,
 	useGetCurrentSongScrobblesQuery,
 	useGetRecentTracksQuery,
-	useGetUserPlaycountQuery,
+	useGetUser30DayStatsQuery,
 	useScrobbleMutation,
 	useGetScrobbleStatusQuery,
 	useScrobbleToggleMutation,

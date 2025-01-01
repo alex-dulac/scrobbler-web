@@ -17,7 +17,7 @@ export default function Copyright(props: any) {
     >
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        lou
+        Lou
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
