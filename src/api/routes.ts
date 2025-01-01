@@ -15,3 +15,4 @@ export const USER_CURRENT_TRACK_SCROBBLES: string = `${USER}current-track-scrobb
 export const USER_ACCOUNTS_APPLE: string = `${USER}accounts/apple/`;
 export const USER_ACCOUNTS_SPOTIFY: string = `${USER}accounts/spotify/`;
 export const USER_ACCOUNTS_LASTFM: string = `${USER}accounts/lastfm/`;
+export const USER_30_DAY_STATS: string = `${USER}30-day-stats/`;
